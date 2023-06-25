@@ -1,0 +1,123 @@
+.row-user-card {
+  display: flex;
+  justify-content: center;
+}
+
+.card-user {
+  margin: 0 40px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.card {
+  width: 15em;
+  height: 10em;
+
+  display: flex;
+  align-items: center;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+
+  border-radius: 30px;
+  margin: 5em auto;
+
+  -webkit-box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 8px rgba(0, 0, 0, 0);
+  box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 8px rgba(0, 0, 0, 0);
+}
+
+/* .card-body {
+  padding: -5px;
+} */
+
+.card-img-top {
+  width: 4em;
+  height: 4em;
+
+  margin-top: -30px;
+  margin-bottom: 0.5em;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.5);
+}
+
+.card-title {
+  font-size: 14, 5px;
+  color: #4050e1;
+
+  margin: -1em;
+}
+
+.card-text {
+  flex: 1;
+  margin: 1rem;
+  padding: 1rem;
+}
+
+.card-link {
+  text-decoration: none;
+  display: block;
+  height: 100%;
+  text-decoration: none;
+}
+
+.card:hover {
+  transform: scale(1.1);
+  transition: 1s;
+}
+
+/* SERVICES CARDS */
+.card-services {
+  background: none;
+  box-shadow: none;
+  opacity: 1;
+}
+
+.card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.card-text {
+  text-transform: lowercase;
+}
+
+.card-footer {
+  width: 100%;
+}
+
+/* ERROR CARD */
+.container-error-card {
+  margin: -50px 0;
+}
+
+.col-md-6,
+.mx-auto {
+  opacity: 0.7;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: -100px;
+  z-index: 9999;
+}
+
+.highlight {
+  background-color: #f1c057;
+}
+
+/* large Card */
+.large-card {
+  width: 95%;
+  height: 250px;
+}
+
+
+/* BIG CARD PROVIDER PROFILE */
+.big-card-profile {
+  width: 100%;
+  height: auto;
+}

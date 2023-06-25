@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!-- html xmlns:th="http://www.thymeleaf.org" = Para evitar que HTML arroje errores por trabajar con elementos de thymeleaf -->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="th_templates/head :: head"></head>
+
+<body>
+  
+  <header th:replace="th_templates/navbar :: navbar"></header>
+
+  <main>
+    <br><br><br>
+
+    <!-- ERROR ALERT -->
+    <!------------ Para reutilizar esta card con mensaje de EXITO, cambiar "danger" por "success" en la clase ------------>
+    <div class="alert alert-danger " role="alert" th:if="${not #strings.isEmpty(mssg)}">
+      <p th:text="${mssg}" class="text-center"></p>
+    </div>
+
+    <!-- IMG OF THE HANDYMAN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
+    <div class="container text-center">
+      <div class="row">
+        <div class="col">
+          <img class="image2" src="../img/login.svg" alt="login">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <h1 class="big-title2">✅ ¡Ingresá!</h1>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
+    <form class="form-container" th:action="@{/logincheck}" method="post">
+
+      <label class="label" for="email"></label>
+      <input type="text" id="email" name="email" placeholder="email@email.com" required />
+
+
+      <label class="label" for="password"></label>
+      <input type="password" id="password" name="password" placeholder="Contraseña" required />
+
+      <div>
+        <button type="summit" class="btn btn-warning button btn-form">✅ ¡Ingresá!</button>
+      </div>
+    </form>
+  </main>
+
+  <!-- PIE DE PÁGINA >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
+
+  <footer th:replace="th_templates/footer :: footer"></footer>
+
+  <!-- Script / Bootstrap -->
+  <div th:replace="th_templates/bootstrap :: bootstrap"></div>
+
+</body>
+
+</html>
