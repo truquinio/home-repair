@@ -48,7 +48,7 @@ public class UserController {
 
     @PostMapping("/register")
     public String userRegister(@ModelAttribute User user, Model model) throws MiException {
-        // eric: simplificado
+        //  simplificado
         if (!userService.validateEmail(user)) {
             userService.createUser(user);
             return "redirect:/login";
@@ -126,7 +126,7 @@ public class UserController {
 
                 if (user.getId().equals(sessionUser.getId())) {
                     session.setAttribute("userSession", userService.modifyUser(id, user, image, false));
-                } else { // eric: solo modifica el user
+                } else { //  solo modifica el user
                     userService.modifyUser(id, user, image, false);
                 }
                 if (sessionUser.getRole().equals(Roles.ADMIN)) {
@@ -198,9 +198,9 @@ public class UserController {
         if (user != null && sessionUser != null
                 && (user.getId().equals(sessionUser.getId()) || sessionUser.getRole().equals(Roles.ADMIN))) {
             userService.deleteUser(id);
-            if (user.getId().equals(sessionUser.getId())) { // eric: solo deslogea si el session es igual al user
+            if (user.getId().equals(sessionUser.getId())) { //  solo deslogea si el session es igual al user
                 return "redirect:/logout";
-            } else if (sessionUser.getRole().equals(Roles.ADMIN)) { // eric: si es admin lo redirecciona a dashboard
+            } else if (sessionUser.getRole().equals(Roles.ADMIN)) { //  si es admin lo redirecciona a dashboard
                 return "redirect:/admin/dashboard";
             }
         }
