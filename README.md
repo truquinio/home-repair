@@ -110,10 +110,9 @@ contacto<br>
 ![img4](https://i.ibb.co/wQr3kjB/04-Mi-marido-te-lo-hace-mi-perfil-User.png)
 ![img5](https://i.ibb.co/52xZ8pw/07-Mi-marido-te-lo-hace-mi-perfil-Provider-foto.png)
 ![img6](https://i.ibb.co/1LRrzsT/09-Mi-marido-te-lo-hace-Profesionales.png)
-![img7](https://i.ibb.co/xHSZvYm/10-Mi-marido-te-lo-hace-plomero.png)
-![img8](https://i.ibb.co/5rYX9QB/14-Mi-marido-te-lo-hace-Calificaci-n.png)
-![img9](https://i.ibb.co/cTVRdcy/15-Mi-marido-te-lo-hace-puntuaci-n.png)
-![img10](https://i.ibb.co/qgtq1hQ/16-Mi-marido-te-lo-hace-panel-admin.png)
+![img7](https://i.ibb.co/5rYX9QB/14-Mi-marido-te-lo-hace-Calificaci-n.png)
+![img8](https://i.ibb.co/cTVRdcy/15-Mi-marido-te-lo-hace-puntuaci-n.png)
+![img9](https://i.ibb.co/qgtq1hQ/16-Mi-marido-te-lo-hace-panel-admin.png)
 
 ## 👨🏻‍💻 Autor:
 
