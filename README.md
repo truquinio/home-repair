@@ -5,13 +5,14 @@
 ## 💫 Sobre el proyecto
 
 Aplicación web full stack que conecta usuarios con proveedores de servicios del hogar (gasistas, plomeros, electricistas, albañiles, etc.). Los usuarios pueden buscar proveedores verificados, contactarlos, y dejar comentarios y puntajes que construyen una red de confianza.
-
-> Desarrollado originalmente en equipo como trabajo final de la formación Full Stack (Egg / Universidad de Alicante). Este repositorio es una copia independiente mantenida y evolucionada por [Federico Trucco](https://github.com/truquinio).
 <br><br>
 
 ## 📸 Capturas
 
-<!-- Arrastrar aquí las imágenes de /capturas-home-repair (home.jpg, registro.jpg, admin.jpg, lista-perfiles.jpg) -->
+<img width="620" height="1111" alt="home" src="https://github.com/user-attachments/assets/3f6f8d3c-a556-4f53-bc34-3113d18d333f" />
+<img width="620" height="651" alt="registro" src="https://github.com/user-attachments/assets/256be1c6-26c1-4451-9518-c74f16805e87" />
+<img width="620" height="1111" alt="admin" src="https://github.com/user-attachments/assets/8383a2de-c682-499d-a053-579ac071276e" />
+<img width="620" height="871" alt="lista-perfiles" src="https://github.com/user-attachments/assets/1f6043df-f8a4-425e-94ac-23a498f3efd1" />
 <br><br>
 
 ## ✨ Funcionalidades
@@ -43,15 +44,15 @@ Aplicación web full stack que conecta usuarios con proveedores de servicios del
 ## 🗂️ Estructura del proyecto
 
 ```
-src/main/java/com/egg/MiMaridoTeLoHace/
-├── controllers/    # Controladores Spring: rutas HTTP
-├── entities/        # Entidades JPA (Proveedor, Usuario, etc.)
-├── enums/           # Roles y constantes
+src/main/java/com/egg/home-repair/
+├── controllers/      # Controladores Spring: rutas HTTP
+├── entities/         # Entidades JPA (Proveedor, Usuario, etc.)
+├── enums/            # Roles y constantes
 ├── exceptions/       # Excepciones personalizadas
 ├── repositories/     # Repositorios JPA
 ├── security/         # Configuración de Spring Security
 ├── services/         # Lógica de negocio
-└── converters/        # Mapeo entre entidades y DTOs
+└── converters/       # Mapeo entre entidades y DTOs
 
 src/main/resources/
 ├── static/           # CSS, JS y recursos estáticos
