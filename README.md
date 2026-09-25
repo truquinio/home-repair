@@ -153,7 +153,4 @@ El proyecto está organizado de la siguiente manera:
 
 # 🧑🏻‍💻 Autores:
 
-Valentin Mathey | <a href="https://github.com/valentinmathey">@valentinmathey</a><br>
-Eric Lemos      | <a href="https://github.com/ErosGael">@ErosGael</a><br>
-Facundo Nedic   | <a href="https://github.com/fnedic">@fnedic</a><br>
 Federico Trucco | <a href="https://github.com/truquinio">@truquinio</a>
