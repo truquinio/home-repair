@@ -44,6 +44,11 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void createUser(User user) throws MiException {
+        createUser(user, null);
+    }
+
+    @Transactional
+    public void createUser(User user, Image customImage) throws MiException {
         if (user == null) {
             throw new MiException("El usuario no puede ser nulo");
         }
@@ -58,8 +63,10 @@ public class UserService implements UserDetailsService {
 
         try {
             boolean provider = user.getProfession() != null;
-            Image image = imageService.getByName(
-                    provider ? "provider-avatar.png" : "customer-avatar.png");
+            Image image = customImage != null
+                    ? customImage
+                    : imageService.getByName(
+                            provider ? "provider-avatar.png" : "customer-avatar.png");
             imageService.save(image);
 
             user.setRole(provider ? Roles.PROVIDER : Roles.CUSTOMER);
