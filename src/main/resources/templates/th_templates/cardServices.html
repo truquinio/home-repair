@@ -1,69 +1,91 @@
 <div th:fragment="cardServices">
-  <!-- eric: le quite  " -->
-  <div class="row row-cols-1 row-cols-md-4 g-4">
-    <div class="col" onclick="window.location.href='/search?profession=ALBAÑIL&st=';">
-      <div class="card h-100 card-services d-flex">
-        <img src="../img/cement.svg" class="services" alt="cement">
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+    <a class="col text-decoration-none"
+       th:href="@{/search(profession='ALBAÑIL',st='')}">
+      <article class="card h-100 card-services d-flex">
+        <img src="/img/cement.svg" class="services" alt="">
         <div class="card-body">
-          <p class="card-text">Servicios confiables y duraderos para tus necesidades de construcción.</p>
+          <h3 class="card-title">Albañilería</h3>
+          <p class="card-text">Construcción, reparación y mantenimiento para el hogar.</p>
         </div>
-      </div>
-    </div>
-    <div class="col" onclick="window.location.href='/search?profession=CARPINTERO&st=';">
-      <div class="card h-100 card-services d-flex">
-        <img src="../img/carpenter.svg" class="services" alt="carpenter">
+      </article>
+    </a>
+
+    <a class="col text-decoration-none"
+       th:href="@{/search(profession='CARPINTERO',st='')}">
+      <article class="card h-100 card-services d-flex">
+        <img src="/img/carpenter.svg" class="services" alt="">
         <div class="card-body">
-          <p class="card-text">Soluciones a medida para tus proyectos de carpintería.</p>
+          <h3 class="card-title">Carpintería</h3>
+          <p class="card-text">Muebles, puertas, ajustes y trabajos de madera a medida.</p>
         </div>
-      </div>
-    </div>
-    <div class="col" onclick="window.location.href='/search?profession=CERRAJERO&st=';">
-      <div class="card h-100 card-services d-flex">
-        <img src="../img/locksmith.svg" class="services" alt="locksmith">
+      </article>
+    </a>
+
+    <a class="col text-decoration-none"
+       th:href="@{/search(profession='CERRAJERO',st='')}">
+      <article class="card h-100 card-services d-flex">
+        <img src="/img/locksmith.svg" class="services" alt="">
         <div class="card-body">
-          <p class="card-text">Profesionales en cerrajería para tus necesidades de seguridad.</p>
+          <h3 class="card-title">Cerrajería</h3>
+          <p class="card-text">Aperturas, cerraduras y soluciones para accesos del hogar.</p>
         </div>
-      </div>
-    </div>
-    <div class="col" onclick="window.location.href='/search?profession=ELECTRICISTA&st=';">
-      <div class="card h-100 card-services d-flex">
-        <img src="../img/electrician.svg" class="services" alt="electrician">
+      </article>
+    </a>
+
+    <a class="col text-decoration-none"
+       th:href="@{/search(profession='ELECTRICISTA',st='')}">
+      <article class="card h-100 card-services d-flex">
+        <img src="/img/electrician.svg" class="services" alt="">
         <div class="card-body">
-          <p class="card-text">Soluciones seguras y eficientes para tus necesidades eléctricas.</p>
+          <h3 class="card-title">Electricidad</h3>
+          <p class="card-text">Instalaciones, iluminación y mantenimiento eléctrico.</p>
         </div>
-      </div>
-    </div>
-    <div class="col"  onclick="window.location.href='/search?profession=GASISTA&st=';">
-      <div class="card h-100 card-services d-flex">
-        <img src="../img/gas.svg" class="services" alt="gas">
+      </article>
+    </a>
+
+    <a class="col text-decoration-none"
+       th:href="@{/search(profession='GASISTA',st='')}">
+      <article class="card h-100 card-services d-flex">
+        <img src="/img/gas.svg" class="services" alt="">
         <div class="card-body">
-          <p class="card-text">Expertos en instalación y reparación de sistemas de gas.</p>
+          <h3 class="card-title">Gas</h3>
+          <p class="card-text">Revisión, instalación y mantenimiento de sistemas de gas.</p>
         </div>
-      </div>
-    </div>
-    <div class="col" onclick="window.location.href='/search?profession=HERRERO&st=';">
-      <div class="card h-100 card-services d-flex">
-        <img src="../img/blacksmith.svg" class="services" alt="blacksmith">
+      </article>
+    </a>
+
+    <a class="col text-decoration-none"
+       th:href="@{/search(profession='HERRERO',st='')}">
+      <article class="card h-100 card-services d-flex">
+        <img src="/img/blacksmith.svg" class="services" alt="">
         <div class="card-body">
-          <p class="card-text">Soluciones creativas y funcionales para tus necesidades de herrería.</p>
+          <h3 class="card-title">Herrería</h3>
+          <p class="card-text">Reparaciones y soluciones metálicas funcionales y duraderas.</p>
         </div>
-      </div>
-    </div>
-    <div class="col" onclick="window.location.href='/search?profession=LIMPIEZA&st=';">
-      <div class="card h-100 card-services d-flex">
-        <img src="../img/cleaning.svg" class="services" alt="cleaning">
+      </article>
+    </a>
+
+    <a class="col text-decoration-none"
+       th:href="@{/search(profession='LIMPIEZA',st='')}">
+      <article class="card h-100 card-services d-flex">
+        <img src="/img/cleaning.svg" class="services" alt="">
         <div class="card-body">
-          <p class="card-text">Soluciones de limpieza para tus necesidades residenciales o comerciales.</p>
+          <h3 class="card-title">Limpieza</h3>
+          <p class="card-text">Limpieza residencial, profunda y mantenimiento periódico.</p>
         </div>
-      </div>
-    </div>
-    <div class="col" onclick="window.location.href='/search?profession=PLOMERO&st=';">
-      <div class="card h-100 card-services">
-        <img src="../img/plumbing.svg" class="services" alt="plumbing">
+      </article>
+    </a>
+
+    <a class="col text-decoration-none"
+       th:href="@{/search(profession='PLOMERO',st='')}">
+      <article class="card h-100 card-services d-flex">
+        <img src="/img/plumbing.svg" class="services" alt="">
         <div class="card-body">
-          <p class="card-text">Instalación, reparación y mantenimiento de sistemas de plomería y desagüe.</p>
+          <h3 class="card-title">Plomería</h3>
+          <p class="card-text">Fugas, grifería, instalaciones y mantenimiento de agua.</p>
         </div>
-      </div>
-    </div>
+      </article>
+    </a>
   </div>
 </div>

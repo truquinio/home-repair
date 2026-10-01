@@ -1,22 +1,33 @@
-<div th:fragment="cardProvider" class="row row-cols-1 row-cols-md-3 g-4">
+<div th:fragment="cardProvider" class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
   <div class="col" th:each="provider : ${searchReturn}">
-    <!-- eric: apartir de aca es la plantilla que se crea multipl veces -->
-      <div class="card h-100" th:id="'provider-' + ${provider.id}" th:data-id="${provider.id}">
-        <img th:src="@{'/image/DB/' + ${provider.image}}" class="card-img-top" alt="profile-provider">
-          <div class="card-body">
-              <h5 class="card-title" th:text="${provider.name+' '+provider.lastname}"></h5>
-              <p class="card-text" th:text="${provider.profession}"></p>
-          </div>
-          <div class="card-footer">
-              <div th:switch="${provider.rating}">
-                  <small th:case="1" class="text-body-secondary">⭐️</small>
-                  <small th:case="2" class="text-body-secondary">⭐⭐️</small>
-                  <small th:case="3" class="text-body-secondary">⭐⭐⭐️️️</small>
-                  <small th:case="4" class="text-body-secondary">⭐⭐⭐️⭐️️</small>
-                  <small th:case="5" class="text-body-secondary">⭐⭐⭐️⭐️⭐️️</small>
-                  <small th:case="0" class="text-body-secondary">"Sin Puntuaciones"️</small>
-              </div>
-          </div>
-      </div>
+    <a class="card-link text-decoration-none"
+       th:href="@{/user/perfil/{id}(id=${provider.id})}">
+      <article class="card h-100 provider-result-card">
+        <img th:src="@{'/image/DB/' + ${provider.image}}"
+             class="card-img-top"
+             th:alt="${'Foto de ' + provider.name + ' ' + provider.lastname}">
+        <div class="card-body">
+          <span class="badge rounded-pill text-bg-light"
+                th:text="${#strings.capitalize(#strings.toLowerCase(provider.profession.name()))}">
+          </span>
+          <h3 class="card-title"
+              th:text="${provider.name + ' ' + provider.lastname}">
+          </h3>
+          <p class="card-text"
+             th:if="${provider.description != null and !#strings.isEmpty(provider.description)}"
+             th:text="${provider.description}">
+          </p>
+        </div>
+        <div class="card-footer bg-transparent">
+          <span th:if="${provider.rating > 0}"
+                th:text="${'★'.repeat(provider.rating) + '☆'.repeat(5 - provider.rating)}">
+          </span>
+          <span th:if="${provider.rating > 0}"
+                th:text="${' ' + provider.rating + '/5'}">
+          </span>
+          <span th:if="${provider.rating == 0}">Sin valoraciones</span>
+        </div>
+      </article>
+    </a>
   </div>
 </div>

@@ -1,132 +1,92 @@
 <header th:fragment="navbar">
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary" aria-label="Navegación principal">
     <div class="container-fluid">
-      <a class="navbar-brand" th:if="${session.userSession == null}" href="/">
-        <img src="/img/logo.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top logo">
-        MMTLH
+      <a class="navbar-brand"
+         th:href="${session.userSession == null} ? @{/} : @{/home}">
+        <img src="/img/logo.svg" alt="" width="30" height="24" class="d-inline-block align-text-top logo">
+        Home Repair
       </a>
-      <a class="navbar-brand" th:if="${session.userSession != null}" href="/home">
-        <img src="/img/logo.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top logo">
-        MMTLH
-      </a>
-      
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+
+      <button class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNavDropdown"
+              aria-controls="navbarNavDropdown"
+              aria-expanded="false"
+              aria-label="Abrir navegación">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
-
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item" sec:authorize="hasRole('ROLE_CUSTOMER') || hasRole('ROLE_PROVIDER')">
-            <a class="nav-link" href="/about">¿Quiénes somos?</a>
-          </li>
-          
-          <li class="nav-item" th:if="${session.userSession == null}">
-            <a class="nav-link" href="/about">¿Quiénes somos?</a>
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/about}">Sobre Home Repair</a>
           </li>
 
           <li class="nav-item" sec:authorize="hasRole('ROLE_PROVIDER')">
-            <a href="/work/worksList" class="nav-link" role="button" aria-expanded="false">
-              Mis Trabajos 🛠️
-            </a>
+            <a th:href="@{/work/worksList}" class="nav-link">Mis trabajos</a>
           </li>
 
           <li class="nav-item" sec:authorize="hasRole('ROLE_CUSTOMER')">
-            <a href="/work/worksList" class="nav-link" role="button" aria-expanded="false">
-              Mis Solicitudes 📝
-            </a>
+            <a th:href="@{/work/worksList}" class="nav-link">Mis solicitudes</a>
           </li>
 
           <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_CUSTOMER')">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Servicios 🧰</a>
+            <a class="nav-link dropdown-toggle"
+               href="#"
+               role="button"
+               data-bs-toggle="dropdown"
+               aria-expanded="false">
+              Servicios
+            </a>
             <ul class="dropdown-menu">
-
-              <li><a class="dropdown-item" href="/search?profession=ALBAÑIL&st=">🧱
-                  Albañilería</a></li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-
-              <li><a class="dropdown-item" href="/search?profession=CARPINTERO&st=">🪚
-                  Carpintería</a></li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-
-              <li><a class="dropdown-item" href="/search?profession=CERRAJERO&st=">🔑
-                  Cerrajería</a></li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-
-              <li><a class="dropdown-item" href="/search?profession=ELECTRICISTA&st=">💡
-                  Electricidad</a></li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-
-              <li><a class="dropdown-item" href="/search?profession=GASISTA&st=">
-                🔥 Gas</a></li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-
-              <li><a class="dropdown-item" href="/search?profession=HERRERO&st=">🔩
-                  Herrería</a></li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-
-              <li><a class="dropdown-item" href="/search?profession=LIMPIEZA&st=">🪣
-                  Limpieza</a></li>
-
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-
-              <li><a class="dropdown-item" href="/search?profession=PLOMERO&st=">🚽
-                  Plomería</a></li>
+              <li><a class="dropdown-item" th:href="@{/search(profession='ALBAÑIL',st='')}">Albañilería</a></li>
+              <li><a class="dropdown-item" th:href="@{/search(profession='CARPINTERO',st='')}">Carpintería</a></li>
+              <li><a class="dropdown-item" th:href="@{/search(profession='CERRAJERO',st='')}">Cerrajería</a></li>
+              <li><a class="dropdown-item" th:href="@{/search(profession='ELECTRICISTA',st='')}">Electricidad</a></li>
+              <li><a class="dropdown-item" th:href="@{/search(profession='GASISTA',st='')}">Gas</a></li>
+              <li><a class="dropdown-item" th:href="@{/search(profession='HERRERO',st='')}">Herrería</a></li>
+              <li><a class="dropdown-item" th:href="@{/search(profession='LIMPIEZA',st='')}">Limpieza</a></li>
+              <li><a class="dropdown-item" th:href="@{/search(profession='PLOMERO',st='')}">Plomería</a></li>
             </ul>
           </li>
 
           <li class="nav-item" th:if="${session.userSession == null}">
-            <a class="nav-link" href="/user/register" role="button" aria-expanded="false">
-              Registrate! 📝
-            </a>
+            <a class="nav-link" th:href="@{/user/register}">Registrarse</a>
           </li>
 
           <li class="nav-item" th:if="${session.userSession == null}">
-            <a class="nav-link" href="/login">Ingresar ✅</a>
-          </li>
-
-          <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')" th:if="${#httpServletRequest.getRequestURI() == '/admin/dashboard' || #httpServletRequest.getRequestURI() == '/admin/search'}">
-            <a class="nav-link" onclick="toggleTable()" role="button" aria-expanded="false">
-              Ver/Ocultar Registros 📅 
-            </a>
+            <a class="nav-link" th:href="@{/login}">Ingresar</a>
           </li>
 
           <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
-            <a href="/admin/dashboard" class="nav-link" role="button" aria-expanded="false">
-              Panel Administrativo ⚙️
-            </a>
+            <a th:href="@{/admin/dashboard}" class="nav-link">Administración</a>
           </li>
 
-          <!-- Fede: Arreglé lo de la img de perfil y nombre de usuario -->
-
           <li class="nav-item dropdown" th:if="${session.userSession != null}">
-            <a class="nav-link dropdown-toggle" aria-current="page" href="#" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              <img th:src="@{'/image/DB/' + ${session.userSession.image}}" alt="Foto de perfil" class="image-profile-navbar">
+            <a class="nav-link dropdown-toggle"
+               href="#"
+               role="button"
+               data-bs-toggle="dropdown"
+               aria-expanded="false">
+              <img th:src="@{'/image/DB/' + ${session.userSession.image}}"
+                   alt=""
+                   class="image-profile-navbar">
               <span class="user-name" th:text="${session.userSession.name}"></span>
             </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" th:href="@{/user/perfil/{id}(id=${session.userSession.id})}">Mi
-                  Perfil</a></li>
+            <ul class="dropdown-menu dropdown-menu-end">
               <li>
-                <hr class="dropdown-divider">
+                <a class="dropdown-item"
+                   th:href="@{/user/perfil/{id}(id=${session.userSession.id})}">
+                  Mi perfil
+                </a>
               </li>
-              <li><a class="dropdown-item" href="/logout">Cerrar Sesión</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form th:action="@{/logout}" method="post">
+                  <button class="dropdown-item" type="submit">Cerrar sesión</button>
+                </form>
+              </li>
             </ul>
           </li>
         </ul>
