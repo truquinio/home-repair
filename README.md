@@ -14,6 +14,14 @@ Permite probar los principales flujos del producto directamente en el navegador:
 
 > La demo utiliza almacenamiento local del navegador. La autenticación, autorización y persistencia de esta versión son simuladas y no sustituyen la seguridad ni la base de datos del backend Java original.
 
+## Capturas
+
+<p align="center">
+  <img width="620" alt="Home Repair - inicio" src="https://github.com/user-attachments/assets/3f6f8d3c-a556-4f53-bc34-3113d18d333f" />
+  <img width="620" alt="Home Repair - registro" src="https://github.com/user-attachments/assets/256be1c6-26c1-4451-9518-c74f16805e87" />
+  <img width="620" alt="Home Repair - administración" src="https://github.com/user-attachments/assets/8383a2de-c682-499d-a053-579ac071276e" />
+  <img width="620" alt="Home Repair - perfiles" src="https://github.com/user-attachments/assets/1f6043df-f8a4-425e-94ac-23a498f3efd1" />
+</p>
 ## Proyecto original
 
 La aplicación original es un proyecto full stack desarrollado con:
@@ -69,7 +77,7 @@ La aplicación original es un proyecto full stack desarrollado con:
 Configura las variables de entorno:
 
 ```bash
-DB_URL=jdbc:mysql://localhost:3306/mimaridotelohace
+DB_URL=jdbc:mysql://localhost:3306/home_repair
 DB_USERNAME=tu_usuario
 DB_PASSWORD=tu_password
 ```

@@ -65,7 +65,7 @@ The Java backend remains the reference implementation for server-side behavior.
 
 ### Package name
 
-The historical Java package `com.egg.MiMaridoTeLoHace` does not follow modern lowercase package naming conventions.
+The historical Java package `com.egg.homerepair` does not follow modern lowercase package naming conventions.
 
 Renaming it would touch nearly every Java file and directory. It is intentionally not mixed into this functional/security refactor because it offers little runtime benefit and would increase migration risk.
 
