@@ -7,7 +7,7 @@ const seed=()=>({
   users:[
     {id:"u-admin",name:"Federico",lastname:"Trucco",email:"admin@homerepair.demo",password:"demo123",role:"ADMIN",profession:null,phone:"",description:"Administrador de la demo Home Repair.",rating:0,active:true,image:"./img/admin.svg"},
     {id:"u-customer",name:"Lucía",lastname:"Gómez",email:"cliente@homerepair.demo",password:"demo123",role:"CUSTOMER",profession:null,phone:"",description:"",rating:0,active:true,image:"./img/customer-avatar.png"},
-    {id:"u-p1",name:"Martín",lastname:"Pérez",email:"plomero@homerepair.demo",password:"demo123",role:"PROVIDER",profession:"PLOMERO",phone:"+54 351 555 0101",description:"Plomería domiciliaria, pérdidas, grifería e instalaciones.",rating:5,active:true,image:"./img/provider-avatar-blue.png"},
+    {id:"u-p1",name:"Martín",lastname:"Pérez",email:"plomero@homerepair.demo",password:"demo123",role:"PROVIDER",profession:"PLOMERO",phone:"+54 351 555 0101",description:"Plomería domiciliaria, pérdidas, grifería e instalaciones.",rating:5,active:true,image:"./img/provider-avatar-lightblue.png"},
     {id:"u-p2",name:"Carla",lastname:"Ruiz",email:"electricista@homerepair.demo",password:"demo123",role:"PROVIDER",profession:"ELECTRICISTA",phone:"+54 351 555 0102",description:"Instalaciones eléctricas, tableros, iluminación y mantenimiento.",rating:4,active:true,image:"./img/provider-avatar-violet.png"},
     {id:"u-p3",name:"Diego",lastname:"López",email:"carpintero@homerepair.demo",password:"demo123",role:"PROVIDER",profession:"CARPINTERO",phone:"+54 351 555 0103",description:"Muebles a medida, reparación y restauración de madera.",rating:5,active:true,image:"./img/provider-avatar-green.png"}
   ],
