@@ -3,69 +3,66 @@ package com.egg.MiMaridoTeLoHace.Services;
 import com.egg.MiMaridoTeLoHace.Entities.Image;
 import com.egg.MiMaridoTeLoHace.Repositories.ImageRepository;
 import com.egg.MiMaridoTeLoHace.converters.ImageConverter;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.Optional;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ImageService {
-    @Autowired
-    private ImageRepository imageRepository;
-    @Autowired
-    ImageConverter imageConverter;
 
-    @Transactional
-    public void Save(Image image){
-       imageRepository.save(image);
+    private final ImageRepository imageRepository;
+    private final ImageConverter imageConverter;
+
+    public ImageService(ImageRepository imageRepository, ImageConverter imageConverter) {
+        this.imageRepository = imageRepository;
+        this.imageConverter = imageConverter;
     }
 
     @Transactional
-    public Image Update(MultipartFile archivo, String idImagen){
-        if (archivo != null) {
-            try {
-                Image imagen = new Image();
-                if (idImagen != null) {
-                    Optional<Image> respuesta = imageRepository.findById(idImagen);
-
-                    if (respuesta.isPresent()) {
-                        imagen = respuesta.get();
-                    }
-                }
-
-                imagen.setMime(archivo.getContentType());
-
-                imagen.setName(archivo.getName());
-
-                imagen.setContent(archivo.getBytes());
-
-                return imageRepository.save(imagen);
-
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
-            }
+    public void Save(Image image) {
+        if (image != null && image.getId() == null) {
+            imageRepository.save(image);
         }
-        return null;
     }
-    public Image GetById(String id){
-        return imageRepository.findById(id).get();
+
+    @Transactional
+    public Image Update(MultipartFile file, String imageId) throws IOException {
+        if (file == null || file.isEmpty()) {
+            return imageId == null ? null : GetById(imageId);
+        }
+
+        Image image = imageId == null
+                ? new Image()
+                : imageRepository.findById(imageId).orElseGet(Image::new);
+
+        image.setMime(file.getContentType());
+        image.setName(file.getOriginalFilename());
+        image.setContent(file.getBytes());
+        return imageRepository.save(image);
+    }
+
+    @Transactional(readOnly = true)
+    public Image GetById(String id) {
+        if (id == null || id.trim().isEmpty()) {
+            return null;
+        }
+        return imageRepository.findById(id).orElse(null);
     }
 
     public Image GetByName(String name) throws IOException {
-        ResourceLoader resourceLoader = new DefaultResourceLoader();
-        Resource resource = resourceLoader.getResource("classpath:/static/img/" + name);
+        ClassPathResource resource = new ClassPathResource("static/img/" + name);
+        if (!resource.exists()) {
+            throw new IOException("No se encontró la imagen " + name);
+        }
         return imageConverter.ResourcetoImage(resource);
     }
 
     @Transactional
-    public void Delete(String id){
-        imageRepository.delete(imageRepository.findById(id).get());
+    public void Delete(String id) {
+        if (id != null && imageRepository.existsById(id)) {
+            imageRepository.deleteById(id);
+        }
     }
 }
