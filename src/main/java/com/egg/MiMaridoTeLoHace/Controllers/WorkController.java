@@ -112,20 +112,8 @@ public class WorkController {
     }
 
     @GetMapping("/worksList")
-    public String worksList(
-            @RequestParam(value = "idWork", required = false) String id,
-            @RequestParam(value = "wStat", required = false) String status,
-            HttpSession session,
-            ModelMap model) throws MiException {
-
+    public String worksList(HttpSession session, ModelMap model) throws MiException {
         User user = requireSessionUser(session);
-
-        if (id != null || status != null) {
-            if (id == null || status == null) {
-                throw new MiException("La actualización del trabajo está incompleta");
-            }
-            workService.changeWorkStatus(id, status, user);
-        }
 
         if (user.getRole() == Roles.PROVIDER) {
             List<Work> works = workRepository.getWorkByUserProvider(user);
@@ -140,6 +128,16 @@ public class WorkController {
         }
 
         return "redirect:/home";
+    }
+
+    @PostMapping("/status")
+    public String updateStatus(
+            @RequestParam("idWork") String id,
+            @RequestParam("wStat") String status,
+            HttpSession session) throws MiException {
+        User user = requireSessionUser(session);
+        workService.changeWorkStatus(id, status, user);
+        return "redirect:/work/worksList";
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
