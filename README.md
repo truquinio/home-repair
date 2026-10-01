@@ -22,6 +22,10 @@ Las siguientes capturas se generan a partir de la demo funcional actual.
 
 ![Home Repair - Inicio](docs/screenshots/home.png)
 
+### Inicio de sesión
+
+![Home Repair - Inicio de sesión](docs/screenshots/login.png)
+
 ### Profesionales
 
 ![Home Repair - Profesionales](docs/screenshots/professionals.png)
