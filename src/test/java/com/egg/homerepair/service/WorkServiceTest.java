@@ -45,6 +45,37 @@ class WorkServiceTest {
     }
 
     @Test
+    void createWorkRejectsBlankOrOversizedContent() {
+        Work blank = new Work();
+        blank.setUserCustomerId(customer);
+        blank.setUserProviderId(provider);
+        blank.setWorkName(" ");
+        blank.setWorkDescription("Valid description");
+
+        Work tooLong = new Work();
+        tooLong.setUserCustomerId(customer);
+        tooLong.setUserProviderId(provider);
+        tooLong.setWorkName("x".repeat(101));
+        tooLong.setWorkDescription("Valid description");
+
+        assertThrows(MiException.class, () -> workService.createWork(blank));
+        assertThrows(MiException.class, () -> workService.createWork(tooLong));
+    }
+
+    @Test
+    void adminCannotReopenReviewedWork() {
+        User admin = user("admin", Roles.ADMIN);
+        work.setWorkStatus(WorkStatus.REVIEWD);
+        when(workRepository.findById("work-1")).thenReturn(Optional.of(work));
+
+        assertThrows(
+                MiException.class,
+                () -> workService.changeWorkStatus("work-1", "REVERT", admin));
+
+        assertEquals(WorkStatus.REVIEWD, work.getWorkStatus());
+    }
+
+    @Test
     void createWorkIgnoresClientSuppliedId() throws MiException {
         Work submitted = new Work();
         submitted.setId("existing-work-id");

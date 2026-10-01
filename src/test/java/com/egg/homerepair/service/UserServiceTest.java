@@ -2,6 +2,7 @@ package com.egg.homerepair.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -37,6 +38,31 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         userService = new UserService(userRepository, imageService, workRepository, passwordEncoder);
+    }
+
+    @Test
+    void createUserRejectsInvalidInput() {
+        User blankName = new User();
+        blankName.setName(" ");
+        blankName.setLastname("Gomez");
+        blankName.setEmail("lucia@example.test");
+        blankName.setPassword("secret123");
+
+        User badEmail = new User();
+        badEmail.setName("Lucia");
+        badEmail.setLastname("Gomez");
+        badEmail.setEmail("not-an-email");
+        badEmail.setPassword("secret123");
+
+        User shortPassword = new User();
+        shortPassword.setName("Lucia");
+        shortPassword.setLastname("Gomez");
+        shortPassword.setEmail("lucia@example.test");
+        shortPassword.setPassword("123");
+
+        assertThrows(Exception.class, () -> userService.createUser(blankName));
+        assertThrows(Exception.class, () -> userService.createUser(badEmail));
+        assertThrows(Exception.class, () -> userService.createUser(shortPassword));
     }
 
     @Test
