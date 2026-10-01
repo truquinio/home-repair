@@ -52,16 +52,20 @@ public class UserController {
         return "registerUser";
     }
 
-    @PostMapping("/register")
-    public String register(@ModelAttribute User user, Model model) throws MiException {
-        if (userService.emailExists(user.getEmail())) {
-            model.addAttribute("mssg", "El email ingresado ya se encuentra registrado 🚫");
+    @PostMapping(value = "/register", consumes = "multipart/form-data")
+    public String register(
+            @ModelAttribute User user,
+            @RequestParam("img") MultipartFile file,
+            Model model) {
+        try {
+            Image image = file == null || file.isEmpty() ? null : imageConverter.convert(file);
+            userService.createUser(user, image);
+            return "redirect:/login";
+        } catch (MiException | IllegalArgumentException ex) {
+            model.addAttribute("mssg", ex.getMessage());
             model.addAttribute("professions", Professions.values());
             return "registerUser";
         }
-
-        userService.createUser(user);
-        return "redirect:/login";
     }
 
     @GetMapping("/perfil/{id}")
