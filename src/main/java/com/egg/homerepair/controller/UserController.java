@@ -5,6 +5,7 @@ import com.egg.homerepair.entity.User;
 import com.egg.homerepair.entity.Work;
 import com.egg.homerepair.enums.Professions;
 import com.egg.homerepair.enums.Roles;
+import com.egg.homerepair.enums.WorkStatus;
 import com.egg.homerepair.exception.MiException;
 import com.egg.homerepair.repository.WorkRepository;
 import com.egg.homerepair.service.ImageService;
@@ -192,7 +193,7 @@ public class UserController {
 
     private void addReviews(Model model, User user) {
         List<Work> reviews = workRepository.findByProvider(user).stream()
-                .filter(work -> work.getWorkStatus() == com.egg.homerepair.enums.WorkStatus.REVIEWD)
+                .filter(work -> work.getWorkStatus() == WorkStatus.REVIEWD)
                 .filter(work -> work.getReview() != null && !work.getReview().trim().isEmpty())
                 .toList();
         model.addAttribute("check", reviews.isEmpty() ? "false" : "");
