@@ -83,11 +83,15 @@ class WorkServiceTest {
         submitted.setUserProviderId(provider);
         submitted.setWorkName("Repair leak");
         submitted.setWorkDescription("Water is leaking under the sink.");
+        submitted.setReview("Injected review");
+        submitted.setRatingWork(5);
 
         workService.createWork(submitted);
 
         assertNull(submitted.getId());
         assertEquals(WorkStatus.REQUIRED, submitted.getWorkStatus());
+        assertNull(submitted.getReview());
+        assertEquals(0, submitted.getRatingWork());
         verify(workRepository).save(submitted);
     }
 
