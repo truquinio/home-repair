@@ -135,12 +135,12 @@ function home(){
   </section>
 
   <section class="section">
-    <div class="section-header"><div><span class="eyebrow">Servicios</span><h2 class="section-title">¿Qué necesitas resolver?</h2><p class="section-copy">Filtra por especialidad y compara perfiles antes de solicitar un trabajo.</p></div></div>
+    <div class="section-header section-header-centered"><div><span class="eyebrow">Servicios</span><h2 class="section-title">¿Qué necesitas resolver?</h2><p class="section-copy">Filtra por especialidad y compara perfiles antes de solicitar un trabajo.</p></div></div>
     <div class="service-grid">${PROFESSIONS.map(p=>`<button class="service-card" data-profession="${p}"><img src="${PROFESSION_META[p].icon}" alt=""><span><strong>${PROFESSION_META[p].label}</strong><span>Ver profesionales</span></span></button>`).join("")}</div>
   </section>
 
   <section class="section">
-    <div class="section-header"><div><span class="eyebrow">Destacados</span><h2 class="section-title">Profesionales mejor valorados</h2><p class="section-copy">Perfiles con experiencia, información visible y valoraciones de clientes.</p></div><a class="btn secondary small" href="#providers">Ver todos</a></div>
+    <div class="section-header section-header-centered"><div><span class="eyebrow">Destacados</span><h2 class="section-title">Profesionales mejor valorados</h2><p class="section-copy">Perfiles con experiencia, información visible y valoraciones de clientes.</p></div><a class="btn secondary small section-header-action" href="#providers">Ver todos</a></div>
     <div class="grid">${providers.sort((a,b)=>b.rating-a.rating).slice(0,3).map(providerCard).join("")}</div>
   </section>
 
