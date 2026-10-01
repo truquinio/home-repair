@@ -1,5 +1,6 @@
 package com.egg.homerepair.security;
 
+import com.egg.homerepair.repository.UserRepository;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -8,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -16,10 +18,15 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
-    public WebSecurity(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    public WebSecurity(
+            UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder,
+            UserRepository userRepository) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -30,6 +37,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .addFilterBefore(
+                        new ActiveUserFilter(userRepository),
+                        UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                     .antMatchers(
                             "/",
