@@ -40,8 +40,10 @@
       <div th:replace="th_templates/cardServices :: cardServices"></div>
     </section>
 
-    <section>
-      <h2 class="title">Zona de trabajo</h2>
+    <section class="work-zone-section" aria-labelledby="work-zone-title">
+      <p class="section-kicker">Cobertura</p>
+      <h2 id="work-zone-title" class="title work-zone-title">Zona de trabajo</h2>
+      <p class="work-zone-copy">Servicios disponibles en Barcelona y su área metropolitana.</p>
       <div th:replace="th_templates/map :: map"></div>
     </section>
   </main>
