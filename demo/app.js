@@ -145,9 +145,9 @@ function home(){
   </section>
 
   <section class="section work-zone" aria-labelledby="work-zone-title">
-    <div class="section-header"><div><span class="eyebrow">Cobertura</span><h2 id="work-zone-title" class="section-title">Zona de trabajo</h2><p class="section-copy">La demo conserva la zona de trabajo definida en el proyecto original.</p></div></div>
+    <div class="section-header"><div><span class="eyebrow">Cobertura</span><h2 id="work-zone-title" class="section-title">Zona de trabajo</h2><p class="section-copy">Servicios disponibles en Barcelona y su área metropolitana.</p></div></div>
     <div class="map-card">
-      <iframe src="https://www.google.com/maps/embed?pb=!1m19!1m8!1m3!1d107099.74700889834!2d-68.8769007!3d-32.9809081!3m2!1i1024!2i768!4f13.1!4m8!3e6!4m0!4m5!1s0x967e0af3dc0e8f1f%3A0x6b647646861df9cf!2sChacras%20de%20Coria%20Mendoza!3m2!1d-32.9809081!2d-68.8769007!5e0!3m2!1ses-419!2sar!4v1682108546727!5m2!1ses-419!2sar" title="Mapa de zona de trabajo de Home Repair" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      <iframe src="https://www.google.com/maps?q=Barcelona%2C%20Espa%C3%B1a&z=11&output=embed" title="Mapa de zona de trabajo de Home Repair en Barcelona" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
     </div>
   </section>
 
