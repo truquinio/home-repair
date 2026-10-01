@@ -1,6 +1,6 @@
 # Home Repair
 
-Plataforma web para conectar personas que necesitan reparaciones del hogar con profesionales de distintos rubros.
+Plataforma web para conectar personas que necesitan reparaciones del hogar con profesionales de distintas especialidades.
 
 **Autor y desarrollador:** [Federico Trucco](https://github.com/truquinio)
 
@@ -10,18 +10,29 @@ La demo funcional está publicada en:
 
 **https://truquinio.github.io/home-repair/**
 
-Permite probar los principales flujos del producto directamente en el navegador: registro, login demo, roles Customer/Provider/Admin, búsqueda de profesionales, perfiles, solicitudes de trabajo, cambios de estado, reviews, ratings y administración simulada.
+Permite probar los principales flujos del producto directamente en el navegador: registro, login demo, roles Cliente/Profesional/Administrador, búsqueda de profesionales, perfiles, solicitudes de trabajo, cambios de estado, reseñas, valoraciones y administración simulada.
 
 > La demo utiliza almacenamiento local del navegador. La autenticación, autorización y persistencia de esta versión son simuladas y no sustituyen la seguridad ni la base de datos del backend Java original.
 
-## Capturas
+## Capturas actuales
 
-<p align="center">
-  <img width="620" alt="Home Repair - inicio" src="https://github.com/user-attachments/assets/3f6f8d3c-a556-4f53-bc34-3113d18d333f" />
-  <img width="620" alt="Home Repair - registro" src="https://github.com/user-attachments/assets/256be1c6-26c1-4451-9518-c74f16805e87" />
-  <img width="620" alt="Home Repair - administración" src="https://github.com/user-attachments/assets/8383a2de-c682-499d-a053-579ac071276e" />
-  <img width="620" alt="Home Repair - perfiles" src="https://github.com/user-attachments/assets/1f6043df-f8a4-425e-94ac-23a498f3efd1" />
-</p>
+Las siguientes capturas se generan a partir de la demo funcional actual.
+
+### Inicio y zona de trabajo
+
+![Home Repair - Inicio](docs/screenshots/home.png)
+
+### Profesionales
+
+![Home Repair - Profesionales](docs/screenshots/professionals.png)
+
+### Perfil profesional
+
+![Home Repair - Perfil profesional](docs/screenshots/professional-profile.png)
+
+### Administración
+
+![Home Repair - Administración](docs/screenshots/admin.png)
 
 ## Proyecto original
 
@@ -39,13 +50,13 @@ La aplicación original es un proyecto full stack desarrollado con:
 
 ### Funcionalidades
 
-- Roles Customer, Provider y Admin
+- Roles Cliente, Profesional y Administrador
 - Registro e inicio de sesión
-- Perfiles de clientes y proveedores
-- Búsqueda y filtrado de profesionales por rubro
+- Perfiles de clientes y profesionales
+- Búsqueda y filtrado de profesionales por especialidad
 - Solicitudes de trabajo
 - Aceptación, cancelación y finalización de trabajos
-- Reviews y ratings
+- Reseñas y valoraciones
 - Gestión administrativa de usuarios
 - Carga y visualización de imágenes
 
@@ -123,11 +134,11 @@ Después abre `http://localhost:8080`.
 
 | Rol | Email | Contraseña |
 | --- | --- | --- |
-| Customer | `cliente@homerepair.demo` | `demo123` |
-| Provider | `plomero@homerepair.demo` | `demo123` |
-| Admin | `admin@homerepair.demo` | `demo123` |
+| Cliente | `cliente@homerepair.demo` | `demo123` |
+| Profesional | `fontanero@homerepair.demo` | `demo123` |
+| Administrador | `admin@homerepair.demo` | `demo123` |
 
-Los datos se guardan en `localStorage` y pueden restaurarse desde el panel Admin.
+Los datos se guardan en `localStorage` y pueden restaurarse desde el panel de Administración.
 
 ## CI/CD
 
