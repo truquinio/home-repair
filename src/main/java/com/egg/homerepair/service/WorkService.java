@@ -43,6 +43,8 @@ public class WorkService {
         work.setId(null);
         work.setWorkName(name);
         work.setWorkDescription(description);
+        work.setReview(null);
+        work.setRatingWork(0);
         work.setWorkStatus(WorkStatus.REQUIRED);
         workRepository.save(work);
     }

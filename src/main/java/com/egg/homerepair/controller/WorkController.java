@@ -145,7 +145,7 @@ public class WorkController {
             @RequestParam("idWork") String idWork) throws MiException {
 
         Work work = workService.getById(idWork);
-        work.setReview("🚫 Comentario censurado 🚫");
+        work.setReview("Comentario moderado por administración.");
         workRepository.save(work);
         return "redirect:/admin/dashboard";
     }
@@ -168,6 +168,9 @@ public class WorkController {
         }
         if (review.isEmpty()) {
             throw new MiException("La reseña no puede estar vacía");
+        }
+        if (review.length() > 500) {
+            throw new MiException("La reseña no puede superar 500 caracteres");
         }
 
         persisted.setReview(review);
