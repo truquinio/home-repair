@@ -6,7 +6,7 @@ Plataforma web para conectar personas que necesitan reparaciones del hogar con p
 
 ## Live Demo
 
-La demo funcional está preparada para publicarse en:
+La demo funcional está publicada en:
 
 **https://truquinio.github.io/home-repair/**
 
