@@ -10,207 +10,218 @@ import com.egg.MiMaridoTeLoHace.Repositories.WorkRepository;
 import com.egg.MiMaridoTeLoHace.Services.ImageService;
 import com.egg.MiMaridoTeLoHace.Services.UserService;
 import com.egg.MiMaridoTeLoHace.converters.ImageConverter;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
-
 import java.io.IOException;
 import java.util.List;
+import javax.servlet.http.HttpSession;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    UserService userService;
-    @Autowired
-    ImageService imageService;
-    @Autowired
-    ImageConverter imageConverter;
-    @Autowired
-    WorkRepository workRepository;
+    private final UserService userService;
+    private final ImageService imageService;
+    private final ImageConverter imageConverter;
+    private final WorkRepository workRepository;
+
+    public UserController(
+            UserService userService,
+            ImageService imageService,
+            ImageConverter imageConverter,
+            WorkRepository workRepository) {
+        this.userService = userService;
+        this.imageService = imageService;
+        this.imageConverter = imageConverter;
+        this.workRepository = workRepository;
+    }
 
     @GetMapping("/register")
-    public String user(Model model) {
-
+    public String register(Model model) {
         model.addAttribute("user", new User());
         model.addAttribute("professions", Professions.values());
-
         return "registerUser";
     }
 
     @PostMapping("/register")
-    public String userRegister(@ModelAttribute User user, Model model) throws MiException {
-        // eric: simplificado
-        if (!userService.validateEmail(user)) {
-            userService.createUser(user);
-            return "redirect:/login";
-        } else {
+    public String register(@ModelAttribute User user, Model model) throws MiException {
+        if (userService.validateEmail(user)) {
             model.addAttribute("mssg", "El email ingresado ya se encuentra registrado 🚫");
             model.addAttribute("professions", Professions.values());
-
             return "registerUser";
         }
 
+        userService.createUser(user);
+        return "redirect:/login";
     }
 
     @GetMapping("/perfil/{id}")
-    public String user(@PathVariable("id") String id, ModelMap model, HttpSession session) throws MiException {
-        
-        User user = userService.getById(id);
-        model.addAttribute("user", user);
+    public String profile(
+            @PathVariable String id,
+            Model model,
+            HttpSession session) throws MiException {
 
-        String check = "";
-        List<Work> listReviews = workRepository.getWorkByUserProvider(user);
-        if (listReviews.size() == 0) {
-            check = "false";
+        User target = userService.getById(id);
+        User actor = sessionUser(session);
+
+        model.addAttribute("user", target);
+        addReviews(model, target);
+
+        if (actor == null) {
+            return "redirect:/login";
         }
-        model.addAttribute("check", check);
-        model.addAttribute("listReviews", listReviews);
 
-        User sessionUser = (User) session.getAttribute("userSession");
-        if (user != null && sessionUser != null
-                && (user.getId().equals(sessionUser.getId()) || sessionUser.getRole().equals(Roles.ADMIN))) {
+        if (target.getId().equals(actor.getId()) || actor.getRole() == Roles.ADMIN) {
             model.addAttribute("professions", Professions.values());
             return "myProfile";
+        }
 
-        } else if (sessionUser != null && sessionUser.getRole().equals(Roles.CUSTOMER)) {
+        if (actor.getRole() == Roles.CUSTOMER && target.getRole() == Roles.PROVIDER) {
             return "otherProfile";
-        } else if (sessionUser != null && sessionUser.getRole().equals(Roles.PROVIDER)) {
-            return "redirect:/home";
-        } else {
-            return "redirect:/user/register";
         }
 
-    }
-
-    @Transactional
-    @GetMapping(value = "/perfil/{id}/review")
-    public String deleteReview(@PathVariable("id") String id, Model model) throws MiException{
-
-        User user = userService.getById(id);
-        model.addAttribute("user", user);
-
-        String check = "";
-        List<Work> listReviews = workRepository.getWorkByUserProvider(user);
-        if (listReviews.size() == 0) {
-            check = "false";
-        }
-        model.addAttribute("check", check);
-        model.addAttribute("listReviews", listReviews);
-
-        return "otherProfile";
-    }
-
-    @Transactional
-    @PostMapping(value = "/perfil/{id}/mod", consumes = "multipart/form-data")
-    public String edit(@PathVariable("id") String id, @ModelAttribute User user,
-            @RequestParam("img") MultipartFile archivo, ModelMap model, HttpSession session) throws MiException {
-
-        try {
-            User sessionUser = (User) session.getAttribute("userSession");
-            if (user != null && sessionUser != null
-                    && (user.getId().equals(sessionUser.getId()) || sessionUser.getRole().equals(Roles.ADMIN))) {
-
-                Image image = null;
-                if (!archivo.isEmpty()) {
-                    image = imageConverter.convert(archivo);
-                }
-
-                if (user.getId().equals(sessionUser.getId())) {
-                    session.setAttribute("userSession", userService.modifyUser(id, user, image, false));
-                } else { // eric: solo modifica el user
-                    userService.modifyUser(id, user, image, false);
-                }
-                if (sessionUser.getRole().equals(Roles.ADMIN)) {
-                    return "redirect:/admin/dashboard";
-                }
-            }
-        } catch (MiException e) {
-            e.printStackTrace();
-        }
         return "redirect:/home";
     }
 
-    @Transactional
-    @PostMapping(value = "/perfil/{id}/change", consumes = "multipart/form-data")
-    public String editModify(@PathVariable("id") String id, @ModelAttribute User user,
-            @RequestParam("img") MultipartFile archivo, ModelMap model, HttpSession session) throws MiException, IOException {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/perfil/{id}/review")
+    public String reviewsForAdmin(@PathVariable String id, Model model) throws MiException {
+        User user = userService.getById(id);
+        model.addAttribute("user", user);
+        addReviews(model, user);
+        return "otherProfile";
+    }
 
-        try {
-            Image defaultImage = imageService.GetByName("customer-avatar.png");
-            User sessionUser = (User) session.getAttribute("userSession");
-            if (user != null && sessionUser != null && (user.getId().equals(sessionUser.getId()))) {
-                Image image = null;
-                if (!archivo.isEmpty()) {
-                    image = imageConverter.convert(archivo);
-                }
+    @PostMapping(value = "/perfil/{id}/mod", consumes = "multipart/form-data")
+    public String edit(
+            @PathVariable String id,
+            @ModelAttribute User changes,
+            @RequestParam("img") MultipartFile file,
+            HttpSession session) throws MiException {
 
-                if(imageService.GetById(sessionUser.getImage()).getName().equals(defaultImage.getName())){
-                    image = imageService.GetByName("provider-avatar.png");
-                }
-                
-                sessionUser = userService.modifyUser(id, user, image, true);
-                session.setAttribute("userSession", sessionUser);
-            }
-        } catch (MiException e) {
-            e.printStackTrace();
+        User actor = requireSessionUser(session);
+        boolean ownProfile = id.equals(actor.getId());
+
+        if (!ownProfile && actor.getRole() != Roles.ADMIN) {
+            throw new MiException("No tenés permisos para editar este perfil");
         }
+
+        Image image = file.isEmpty() ? null : imageConverter.convert(file);
+        User updated = userService.modifyUser(id, changes, image, false);
+
+        if (ownProfile) {
+            session.setAttribute("userSession", updated);
+            return "redirect:/user/perfil/" + id;
+        }
+
+        return "redirect:/admin/dashboard";
+    }
+
+    @PostMapping(value = "/perfil/{id}/change", consumes = "multipart/form-data")
+    public String changeRole(
+            @PathVariable String id,
+            @ModelAttribute User changes,
+            @RequestParam("img") MultipartFile file,
+            HttpSession session) throws MiException {
+
+        User actor = requireSessionUser(session);
+        if (!id.equals(actor.getId()) || actor.getRole() == Roles.ADMIN) {
+            throw new MiException("No podés cambiar este perfil");
+        }
+
+        Image image = file.isEmpty() ? defaultImageForRoleChange(actor) : imageConverter.convert(file);
+        User updated = userService.modifyUser(id, changes, image, true);
+        session.setAttribute("userSession", updated);
+
+        // The granted authorities must be recreated after a role change.
         return "redirect:/logout";
     }
 
-    @Transactional
-    @GetMapping("/perfil/{id}/role")
-    public String editRole(@PathVariable("id") String id, ModelMap model, HttpSession session) throws MiException {
-        User user = userService.getById(id);
-        User sessionUser = (User) session.getAttribute("userSession");
-        if (sessionUser != null && sessionUser.getRole().equals(Roles.ADMIN)) {
-            userService.updateRole(user);
-        }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/perfil/{id}/role")
+    public String editRole(@PathVariable String id) throws MiException {
+        userService.updateRole(userService.getById(id));
         return "redirect:/admin/dashboard";
     }
 
-    @Transactional
-    @GetMapping("/perfil/{id}/alta")
-    public String editAlta(@PathVariable("id") String id, ModelMap model, HttpSession session) throws MiException {
-        User user = userService.getById(id);
-        User sessionUser = (User) session.getAttribute("userSession");
-        if (sessionUser != null && sessionUser.getRole().equals(Roles.ADMIN)) {
-            userService.updateaAlta(user);
-        }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/perfil/{id}/alta")
+    public String editAlta(@PathVariable String id) throws MiException {
+        userService.updateaAlta(userService.getById(id));
         return "redirect:/admin/dashboard";
     }
 
-    @Transactional
     @PostMapping("/perfil/{id}/del")
-    public String delete(@PathVariable("id") String id, ModelMap model, HttpSession session) throws MiException {
-        // se podrian agregar mas controles a futuro
-        User user = userService.getById(id);
+    public String delete(@PathVariable String id, HttpSession session) throws MiException {
+        User actor = requireSessionUser(session);
+        boolean ownAccount = id.equals(actor.getId());
 
-        User sessionUser = (User) session.getAttribute("userSession");
-        if (user != null && sessionUser != null
-                && (user.getId().equals(sessionUser.getId()) || sessionUser.getRole().equals(Roles.ADMIN))) {
-            userService.deleteUser(id);
-            if (user.getId().equals(sessionUser.getId())) { // eric: solo deslogea si el session es igual al user
-                return "redirect:/logout";
-            } else if (sessionUser.getRole().equals(Roles.ADMIN)) { // eric: si es admin lo redirecciona a dashboard
-                return "redirect:/admin/dashboard";
-            }
+        if (!ownAccount && actor.getRole() != Roles.ADMIN) {
+            throw new MiException("No tenés permisos para eliminar esta cuenta");
         }
-        return "redirect:/";
+
+        userService.deleteUser(id);
+
+        if (ownAccount) {
+            return "redirect:/logout";
+        }
+        return "redirect:/admin/dashboard";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/list")
-    public String listUsers(ModelMap modelo) throws MiException {
-        List<User> users = userService.userList();
-        modelo.addAttribute("users", users);
+    public String listUsers(Model model) {
+        model.addAttribute("users", userService.userList());
         return "userList";
+    }
+
+    private void addReviews(Model model, User user) {
+        List<Work> reviews = workRepository.getWorkByUserProvider(user);
+        model.addAttribute("check", reviews.isEmpty() ? "false" : "");
+        model.addAttribute("listReviews", reviews);
+    }
+
+    private User sessionUser(HttpSession session) {
+        Object value = session.getAttribute("userSession");
+        return value instanceof User ? (User) value : null;
+    }
+
+    private User requireSessionUser(HttpSession session) throws MiException {
+        User user = sessionUser(session);
+        if (user == null) {
+            throw new MiException("Debés iniciar sesión");
+        }
+        return userService.getById(user.getId());
+    }
+
+    private Image defaultImageForRoleChange(User current) throws MiException {
+        Image currentImage = imageService.GetById(current.getImage());
+        if (currentImage == null) {
+            return null;
+        }
+
+        try {
+            if (current.getRole() == Roles.CUSTOMER
+                    && "customer-avatar.png".equals(currentImage.getName())) {
+                return imageService.GetByName("provider-avatar.png");
+            }
+
+            if (current.getRole() == Roles.PROVIDER
+                    && "provider-avatar.png".equals(currentImage.getName())) {
+                return imageService.GetByName("customer-avatar.png");
+            }
+
+            return null;
+        } catch (IOException e) {
+            throw new MiException("No se pudo cargar la imagen por defecto");
+        }
     }
 }

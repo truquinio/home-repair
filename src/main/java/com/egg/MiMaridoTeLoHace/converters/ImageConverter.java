@@ -1,43 +1,51 @@
 package com.egg.MiMaridoTeLoHace.converters;
 
 import com.egg.MiMaridoTeLoHace.Entities.Image;
+import java.io.IOException;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyEditor;
-import java.io.IOException;
-
 @Component
-public class ImageConverter implements Converter<MultipartFile, Image>, PropertyEditor {
+public class ImageConverter implements Converter<MultipartFile, Image> {
 
     @Override
-    public Image convert(MultipartFile multipartFile) {
-        Image image = new Image();
-        image.setName(multipartFile.getOriginalFilename());
-        image.setMime(multipartFile.getContentType());
+    public Image convert(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return null;
+        }
 
         try {
-            image.setContent(multipartFile.getBytes());
+            Image image = new Image();
+            image.setName(file.getOriginalFilename());
+            image.setMime(file.getContentType());
+            image.setContent(file.getBytes());
+            return image;
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalArgumentException("No se pudo procesar la imagen", e);
         }
-        return image;
     }
 
-    public Image ResourcetoImage(Resource resource) throws IOException {
-        Image image = new Image();
-        image.setMime(getMimeType(resource.getFilename()));
-        if (!image.getMime().isEmpty()) {
-            image.setName(resource.getFilename());
-            image.setContent(IOUtils.toByteArray(resource.getInputStream()));
-        } else {
-            image = null;
+    public Image resourceToImage(Resource resource) throws IOException {
+        if (resource == null || !resource.exists()) {
+            throw new IOException("Recurso de imagen no encontrado");
         }
+
+        String mime = getMimeType(resource.getFilename());
+        if (mime == null) {
+            throw new IOException("Formato de imagen no soportado");
+        }
+
+        Image image = new Image();
+        image.setMime(mime);
+        image.setName(resource.getFilename());
+
+        try (var input = resource.getInputStream()) {
+            image.setContent(IOUtils.toByteArray(input));
+        }
+
         return image;
     }
 
@@ -45,12 +53,14 @@ public class ImageConverter implements Converter<MultipartFile, Image>, Property
         if (filename == null) {
             return null;
         }
-        int extIndex = filename.lastIndexOf(".");
-        if (extIndex == -1) {
+
+        int extensionIndex = filename.lastIndexOf('.');
+        if (extensionIndex < 0 || extensionIndex == filename.length() - 1) {
             return null;
         }
-        String ext = filename.substring(extIndex + 1);
-        switch (ext.toLowerCase()) {
+
+        String extension = filename.substring(extensionIndex + 1).toLowerCase();
+        switch (extension) {
             case "jpg":
             case "jpeg":
                 return "image/jpeg";
@@ -59,65 +69,5 @@ public class ImageConverter implements Converter<MultipartFile, Image>, Property
             default:
                 return null;
         }
-    }
-
-    @Override
-    public void setValue(Object value) {
-
-    }
-
-    @Override
-    public Object getValue() {
-        return null;
-    }
-
-    @Override
-    public boolean isPaintable() {
-        return false;
-    }
-
-    @Override
-    public void paintValue(Graphics gfx, Rectangle box) {
-
-    }
-
-    @Override
-    public String getJavaInitializationString() {
-        return null;
-    }
-
-    @Override
-    public String getAsText() {
-        return null;
-    }
-
-    @Override
-    public void setAsText(String text) throws IllegalArgumentException {
-
-    }
-
-    @Override
-    public String[] getTags() {
-        return new String[0];
-    }
-
-    @Override
-    public java.awt.Component getCustomEditor() {
-        return null;
-    }
-
-    @Override
-    public boolean supportsCustomEditor() {
-        return false;
-    }
-
-    @Override
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-
-    }
-
-    @Override
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-
     }
 }

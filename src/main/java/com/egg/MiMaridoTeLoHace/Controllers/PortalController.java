@@ -2,12 +2,12 @@ package com.egg.MiMaridoTeLoHace.Controllers;
 
 import com.egg.MiMaridoTeLoHace.Entities.User;
 import com.egg.MiMaridoTeLoHace.Enums.Professions;
+import com.egg.MiMaridoTeLoHace.Enums.Roles;
 import com.egg.MiMaridoTeLoHace.Exceptions.MiException;
 import com.egg.MiMaridoTeLoHace.Services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import java.util.Collections;
+import java.util.List;
 import javax.servlet.http.HttpSession;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,35 +16,36 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
 @Controller
 @RequestMapping("/")
 public class PortalController {
-    @Autowired
-    UserService userService;
+
+    private final UserService userService;
+
+    public PortalController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PreAuthorize("hasAnyRole('ROLE_CUSTOMER', 'ROLE_PROVIDER', 'ROLE_ADMIN')")
     @GetMapping("/home")
-    public String home(HttpSession session, Model model) {
-
-        User logued = (User) session.getAttribute("userSession");
-
-        if (logued.getRole().toString().equals("ADMIN")) {
-            return "redirect:/admin/dashboard";
+    public String home(HttpSession session) {
+        Object value = session.getAttribute("userSession");
+        if (!(value instanceof User)) {
+            return "redirect:/login";
         }
 
+        User user = (User) value;
+        if (user.getRole() == Roles.ADMIN) {
+            return "redirect:/admin/dashboard";
+        }
         return "home";
     }
 
     @GetMapping("/login")
     public String login(@RequestParam(required = false) String error, Model model) {
-
         if (error != null) {
-            String mssg = "Usuario o contraseña invalidos 🚫";
-            model.addAttribute("mssg", mssg);
+            model.addAttribute("mssg", "Usuario o contraseña inválidos 🚫");
         }
-
         return "login";
     }
 
@@ -59,37 +60,40 @@ public class PortalController {
     }
 
     @GetMapping("/search")
-    public String showProviders(@RequestParam("profession") String profession,
-            @RequestParam(name = "st", required = false) String search, ModelMap model)
-            throws MiException {
+    public String showProviders(
+            @RequestParam(name = "profession", defaultValue = "") String profession,
+            @RequestParam(name = "st", defaultValue = "") String search,
+            ModelMap model) {
 
-        List<User> searchReturn = null;
-        if (profession == "" && search == "") {
-            searchReturn = userService.AllProviderAlta();
+        String professionValue = profession.trim();
+        String searchValue = search.trim();
+        List<User> results;
 
-        } else if (profession == "" && search != "") {
-            searchReturn = userService.AllAltaFiltro(search);
-
-        } else if (profession != "" && search == "") {
-            for (Professions professions : Professions.values()) {
-                if (professions.name().equals(profession)) {
-                    System.out.println("hubo coincidencias con la profecion: " + professions.name());
-                    searchReturn = userService.ProfessionAlta(professions);
-                    break;
-                }
-            }
-
-        } else if (profession != "" && search != "") {
-            for (Professions professions : Professions.values()) {
-                if (professions.name().equals(profession)) {
-                    searchReturn = userService.AllProfessionAltaFiltro(professions, search);
-                    System.out.println("profession: " + professions + "\nsearch: " + search);
-                    break;
-                }
+        if (professionValue.isEmpty() && searchValue.isEmpty()) {
+            results = userService.AllProviderAlta();
+        } else if (professionValue.isEmpty()) {
+            results = userService.AllAltaFiltro(searchValue);
+        } else {
+            Professions parsedProfession = parseProfession(professionValue);
+            if (parsedProfession == null) {
+                results = Collections.emptyList();
+            } else if (searchValue.isEmpty()) {
+                results = userService.ProfessionAlta(parsedProfession);
+            } else {
+                results = userService.AllProfessionAltaFiltro(parsedProfession, searchValue);
             }
         }
+
         model.addAttribute("professions", Professions.values());
-        model.addAttribute("searchReturn", searchReturn);
+        model.addAttribute("searchReturn", results);
         return "provider";
+    }
+
+    private Professions parseProfession(String value) {
+        try {
+            return Professions.valueOf(value);
+        } catch (IllegalArgumentException ex) {
+            return null;
+        }
     }
 }

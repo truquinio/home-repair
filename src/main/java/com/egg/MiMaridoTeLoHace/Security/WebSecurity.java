@@ -1,10 +1,5 @@
 package com.egg.MiMaridoTeLoHace.Security;
 
-import com.egg.MiMaridoTeLoHace.Services.UserService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -12,59 +7,62 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled=true)
-public class WebSecurity extends WebSecurityConfigurerAdapter{
-    
-    @Autowired
-    public UserService userService;    
-    
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    @Qualifier("userService") //VALENTIN - Solusion temporal para el tema de los BEAN (Se puede modificar entre admin o provider o customer)
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public WebSecurity(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
-        auth.userDetailsService(userService)
-                .passwordEncoder(new BCryptPasswordEncoder());
-    }
-    
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
-    
-     @Override
+
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                        .antMatchers("/admin/*").hasRole("ADMIN")
-                        .antMatchers("/css/*", "/js/*", "/img/*", "/**")
+                    .antMatchers(
+                            "/",
+                            "/about",
+                            "/login",
+                            "/logincheck",
+                            "/user/register",
+                            "/search",
+                            "/image/**",
+                            "/css/**",
+                            "/js/**",
+                            "/img/**",
+                            "/webjars/**")
                         .permitAll()
-                .and().formLogin()
+                    .antMatchers("/admin/**")
+                        .hasRole("ADMIN")
+                    .anyRequest()
+                        .authenticated()
+                .and()
+                    .formLogin()
                         .loginPage("/login")
                         .loginProcessingUrl("/logincheck")
                         .usernameParameter("email")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/home")
+                        .defaultSuccessUrl("/home", true)
+                        .failureUrl("/login?error=true")
                         .permitAll()
-                .and().logout()
+                .and()
+                    .logout()
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
-                        .permitAll()
-                .and().csrf()
-                        .disable();
-                
-
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .permitAll();
     }
 }

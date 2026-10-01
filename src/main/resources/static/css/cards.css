@@ -1,123 +1,109 @@
 .row-user-card {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
 }
 
 .card-user {
-  margin: 0 40px;
-  overflow: hidden;
-  transition: transform 0.3s ease;
+  margin: 0;
+  overflow: visible;
 }
 
 .card {
-  width: 15em;
-  height: 10em;
-
+  width: min(100%, 15rem);
+  min-height: 10rem;
+  height: auto;
   display: flex;
   align-items: center;
   text-align: center;
-  border: none;
+  border: 0;
   cursor: pointer;
-
   border-radius: 30px;
-  margin: 5em auto;
-
-  -webkit-box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 8px rgba(0, 0, 0, 0);
-  box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 8px rgba(0, 0, 0, 0);
+  margin: 3rem auto;
+  box-shadow: 0 10px 13px -7px #000;
+  transition: transform .2s ease, box-shadow .2s ease;
 }
 
-/* .card-body {
-  padding: -5px;
-} */
-
 .card-img-top {
-  width: 4em;
-  height: 4em;
-
-  margin-top: -30px;
-  margin-bottom: 0.5em;
+  width: 4rem;
+  height: 4rem;
+  margin-top: -2rem;
+  margin-bottom: .5rem;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 7px rgba(0, 0, 0, .5);
 }
 
 .card-title {
-  font-size: 14, 5px;
+  font-size: .95rem;
   color: #4050e1;
-
-  margin: -1em;
+  margin: 0;
 }
 
 .card-text {
   flex: 1;
-  margin: 1rem;
+  margin: 0;
   padding: 1rem;
 }
 
 .card-link {
-  text-decoration: none;
   display: block;
   height: 100%;
   text-decoration: none;
 }
 
 .card:hover {
-  transform: scale(1.1);
-  transition: 1s;
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 13px 24px rgba(0, 0, 0, .18);
 }
 
-/* SERVICES CARDS */
 .card-services {
   background: none;
   box-shadow: none;
-  opacity: 1;
 }
 
 .card-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   flex-wrap: wrap;
-}
-
-.card-text {
-  text-transform: lowercase;
+  gap: 1rem;
 }
 
 .card-footer {
   width: 100%;
 }
 
-/* ERROR CARD */
 .container-error-card {
   margin: -50px 0;
 }
 
-.col-md-6,
-.mx-auto {
-  opacity: 0.7;
+.col-md-6.mx-auto {
+  opacity: .7;
   font-size: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
   top: -100px;
-  z-index: 9999;
+  z-index: 10;
 }
 
 .highlight {
   background-color: #f1c057;
 }
 
-/* large Card */
-.large-card {
-  width: 95%;
-  height: 250px;
+.large-card,
+.big-card-profile {
+  width: min(100%, 900px);
+  height: auto;
+  min-height: 250px;
 }
 
-
-/* BIG CARD PROVIDER PROFILE */
-.big-card-profile {
-  width: 100%;
-  height: auto;
+@media (max-width: 576px) {
+  .card {
+    width: 100%;
+    margin: 2.5rem auto;
+  }
 }

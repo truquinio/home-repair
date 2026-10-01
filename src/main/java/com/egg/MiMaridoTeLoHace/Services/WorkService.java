@@ -1,81 +1,121 @@
 package com.egg.MiMaridoTeLoHace.Services;
 
+import com.egg.MiMaridoTeLoHace.Entities.User;
 import com.egg.MiMaridoTeLoHace.Entities.Work;
+import com.egg.MiMaridoTeLoHace.Enums.Roles;
 import com.egg.MiMaridoTeLoHace.Enums.WorkStatus;
 import com.egg.MiMaridoTeLoHace.Exceptions.MiException;
-
-import java.util.Optional;
-
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.egg.MiMaridoTeLoHace.Repositories.WorkRepository;
+import javax.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
 @Service
 public class WorkService {
-    // pruebas con reviews
-    @Autowired
-    WorkRepository workRepository;
 
-    @Autowired
-    UserService userService;
+    private final WorkRepository workRepository;
+
+    public WorkService(WorkRepository workRepository) {
+        this.workRepository = workRepository;
+    }
 
     @Transactional
     public void createWork(Work work) throws MiException {
-
-        try {
-
-            work.setWorkStatus(WorkStatus.REQUIRED);
-            workRepository.save(work);
-
-        } catch (Exception e) {
-            throw new MiException("ERROR al generar solicitud de trabajo");
+        if (work == null || work.getUserCustomerId() == null || work.getUserProviderId() == null) {
+            throw new MiException("La solicitud de trabajo no es válida");
         }
-    }
 
-    //--------------------------------- EVALUAR SI LO VAMOS A USAR DESDE ADMIN ---------------------------------
-    // @Transactional
-    // public void editReview(Work work) {
-    //     Work original = getById(work.getId());
-
-    //     if (original.getWorkStatus().name().equals("REVIEWD")) {
-    //         original.setRatingWork(work.getRatingWork());
-    //         original.setReview(work.getReview());
-    //     } else {
-    //         if (work.getWorkStatus().name().equals("REVIEWD")) {
-    //             original.setWorkStatus(WorkStatus.DONE);
-    //         } else if (work.getWorkStatus().name().equals("DONE")) {
-    //             original.setWorkStatus(WorkStatus.ACCEPTED);
-    //         }
-    //     }
-    //     workRepository.save(original);
-    // }
-
-    @Transactional
-    public void delete(String id) {
-        workRepository.delete(getById(id));
-    }
-
-    public Work getById(String id) {
-        return workRepository.findById(id).get();
+        work.setWorkStatus(WorkStatus.REQUIRED);
+        workRepository.save(work);
     }
 
     @Transactional
-    public void changeWorkStatus(String id, String wStat) throws MiException{
-        
+    public void delete(String id) throws MiException {
+        workRepository.delete(findById(id));
+    }
+
+    public Work getById(String id) throws MiException {
+        return findById(id);
+    }
+
+    @Transactional
+    public void changeWorkStatus(String id, String requestedStatus, User actor) throws MiException {
+        if (actor == null) {
+            throw new MiException("Debés iniciar sesión");
+        }
+
+        Work work = findById(id);
+        WorkStatus nextStatus = parseEditableStatus(requestedStatus);
+
+        if (!canAccess(work, actor)) {
+            throw new MiException("No tenés permisos para modificar este trabajo");
+        }
+
+        if (actor.getRole() != Roles.ADMIN && !isAllowedTransition(work, nextStatus, actor)) {
+            throw new MiException("La transición de estado solicitada no está permitida");
+        }
+
+        work.setWorkStatus(nextStatus);
+    }
+
+    private Work findById(String id) throws MiException {
+        if (id == null || id.trim().isEmpty()) {
+            throw new MiException("El identificador del trabajo es obligatorio");
+        }
+
+        return workRepository.findById(id)
+                .orElseThrow(() -> new MiException("Trabajo no encontrado"));
+    }
+
+    private WorkStatus parseEditableStatus(String value) throws MiException {
+        if (value == null) {
+            throw new MiException("El estado del trabajo es obligatorio");
+        }
+
         try {
-            
-            Optional<Work> work = workRepository.findById(id);
-            if (work.isPresent() && wStat.equals("REVERT") || wStat.equals("ACCEPTED") || wStat.equals("DONE")) {
-                Work newWorkStatus = work.get();
-                newWorkStatus.setWorkStatus(WorkStatus.valueOf(wStat)); 
+            WorkStatus status = WorkStatus.valueOf(value);
+            if (status != WorkStatus.REVERT
+                    && status != WorkStatus.ACCEPTED
+                    && status != WorkStatus.DONE) {
+                throw new MiException("Transición de estado no permitida");
             }
-
-        } catch (Exception e) {
-            throw new MiException("ERROR AL MODIFICAR WORK STATUS");
+            return status;
+        } catch (IllegalArgumentException ex) {
+            throw new MiException("Estado de trabajo inválido: " + value);
         }
-
     }
 
+    private boolean canAccess(Work work, User actor) {
+        if (actor.getRole() == Roles.ADMIN) {
+            return true;
+        }
+
+        if (actor.getRole() == Roles.CUSTOMER) {
+            return work.getUserCustomerId() != null
+                    && actor.getId().equals(work.getUserCustomerId().getId());
+        }
+
+        if (actor.getRole() == Roles.PROVIDER) {
+            return work.getUserProviderId() != null
+                    && actor.getId().equals(work.getUserProviderId().getId());
+        }
+
+        return false;
+    }
+
+    private boolean isAllowedTransition(Work work, WorkStatus next, User actor) {
+        WorkStatus current = work.getWorkStatus();
+
+        if (current == WorkStatus.REQUIRED) {
+            if (next == WorkStatus.REVERT) {
+                return actor.getRole() == Roles.CUSTOMER || actor.getRole() == Roles.PROVIDER;
+            }
+            return next == WorkStatus.ACCEPTED && actor.getRole() == Roles.PROVIDER;
+        }
+
+        if (current == WorkStatus.ACCEPTED) {
+            return next == WorkStatus.DONE || next == WorkStatus.REVERT;
+        }
+
+        return false;
+    }
 }

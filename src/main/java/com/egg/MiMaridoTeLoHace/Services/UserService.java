@@ -1,330 +1,290 @@
 package com.egg.MiMaridoTeLoHace.Services;
 
+import com.egg.MiMaridoTeLoHace.Entities.Image;
+import com.egg.MiMaridoTeLoHace.Entities.User;
+import com.egg.MiMaridoTeLoHace.Entities.Work;
+import com.egg.MiMaridoTeLoHace.Enums.Professions;
+import com.egg.MiMaridoTeLoHace.Enums.Roles;
+import com.egg.MiMaridoTeLoHace.Enums.WorkStatus;
+import com.egg.MiMaridoTeLoHace.Exceptions.MiException;
+import com.egg.MiMaridoTeLoHace.Repositories.UserRepository;
+import com.egg.MiMaridoTeLoHace.Repositories.WorkRepository;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-
 import javax.servlet.http.HttpSession;
-
-import com.egg.MiMaridoTeLoHace.Enums.Professions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.egg.MiMaridoTeLoHace.Entities.Image;
-import com.egg.MiMaridoTeLoHace.Entities.User;
-import com.egg.MiMaridoTeLoHace.Entities.Work;
-import com.egg.MiMaridoTeLoHace.Enums.Roles;
-import com.egg.MiMaridoTeLoHace.Exceptions.MiException;
-import com.egg.MiMaridoTeLoHace.Repositories.ImageRepository;
-import com.egg.MiMaridoTeLoHace.Repositories.UserRepository;
-import com.egg.MiMaridoTeLoHace.Repositories.WorkRepository;
-
 @Service
 public class UserService implements UserDetailsService {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final ImageService imageService;
+    private final WorkRepository workRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    ImageRepository imageRepository;
+    public UserService(
+            UserRepository userRepository,
+            ImageService imageService,
+            WorkRepository workRepository,
+            PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.imageService = imageService;
+        this.workRepository = workRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
-    @Autowired
-    ImageService imageService;
-
-    @Autowired
-    WorkRepository workRepository;
-
-    // ---- Service USER ------ (Se usara para crear, modificar y borrar Customers y
-    // Providers)
     @Transactional
     public void createUser(User user) throws MiException {
+        if (user == null) {
+            throw new MiException("El usuario no puede ser nulo");
+        }
+        if (validateEmail(user)) {
+            throw new MiException("El email ya se encuentra registrado");
+        }
 
         try {
+            boolean provider = user.getProfession() != null;
+            Image image = imageService.GetByName(provider ? "provider-avatar.png" : "customer-avatar.png");
 
-            Image image = null;
-
-            if (user.getProfession() == null) {
-                user.setRole(Roles.CUSTOMER);
-                user.setRating(0);
-                image = imageService.GetByName("customer-avatar.png");
-            } else {
-                user.setRole(Roles.PROVIDER);
-                user.setRating(0);
-                image = imageService.GetByName("provider-avatar.png");
-            }
-
-            imageService.Save(image);
+            user.setRole(provider ? Roles.PROVIDER : Roles.CUSTOMER);
+            user.setRating(0);
             user.setImage(image.getId());
             user.setAlta(true);
-            user.setSubscription(new Date(System.currentTimeMillis()));
-            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+            user.setSubscription(new Date());
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
 
             userRepository.save(user);
-
         } catch (Exception e) {
-            throw new MiException("Error al crear USER!");
+            throw new MiException("Error al crear usuario");
         }
     }
 
     @Transactional
-    public User modifyUser(String id, User user, Image image, boolean change) throws MiException {
-        try {
-            User originalUser = userRepository.findById(id).get();
-            
-            if(change){
-                if (originalUser.getRole().name().equals("CUSTOMER")) {
-                    originalUser.setRating(0);
-                    //eric: asignar nuevo rol
-                    originalUser.setRole(Roles.PROVIDER);
-                    //eric: la descripcion, profession, telefono estan en la linea 100
-                } else if (originalUser.getRole().name().equals("PROVIDER")) { 
-                    originalUser.setDescription(null);
-                    originalUser.setProfession(null);
-                    originalUser.setPhone(null);
-                    originalUser.setRating(0);
-                    //eric: asignar nuevo rol
-                    originalUser.setRole(Roles.CUSTOMER);
-                }
-            }
+    public User modifyUser(String id, User changes, Image image, boolean changeRole) throws MiException {
+        User original = findUser(id);
 
-            if (originalUser.getRole().equals(Roles.PROVIDER)) {
-                if(!user.getDescription().isEmpty()){
-                    originalUser.setDescription(user.getDescription());
-                }
-                originalUser.setProfession(user.getProfession());
-                originalUser.setPhone(user.getPhone());
-            }
-
-            if (image != null) {
-                imageService.Delete(originalUser.getImage());
-                imageService.Save(image);
-                originalUser.setImage(image.getId());
-            }
-            originalUser.setName(user.getName());
-            originalUser.setLastname(user.getLastname());
-
-            if (user.getPassword() != null) {
-                originalUser.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-            }
-            userRepository.save(originalUser);
-            return originalUser;
-
-        } catch (Exception e) {
-            throw new MiException("ERROR al modificar USUARIO " + user.getName() + " " + user.getLastname()
-                    + ". \n error: " + e.getMessage());
+        if (changeRole) {
+            toggleCustomerProvider(original);
         }
+
+        if (original.getRole() == Roles.PROVIDER) {
+            original.setDescription(normalizeOptionalText(changes.getDescription()));
+            original.setProfession(changes.getProfession());
+            original.setPhone(normalizeOptionalText(changes.getPhone()));
+        }
+
+        if (image != null) {
+            replaceImage(original, image);
+        }
+
+        original.setName(changes.getName());
+        original.setLastname(changes.getLastname());
+
+        if (changes.getPassword() != null && !changes.getPassword().trim().isEmpty()) {
+            original.setPassword(passwordEncoder.encode(changes.getPassword()));
+        }
+
+        return userRepository.save(original);
     }
 
     @Transactional
     public void deleteUser(String id) throws MiException {
-        // eric: metodo reecho
-        try {
-            User originalUser = userRepository.findById(id).get();
-            originalUser.setAlta(false);
-            originalUser.setUnsubscription(new Date(System.currentTimeMillis()));
-        } catch (Exception e) {
-            throw new MiException("ERROR al borrar USUARIO!");
-        }
+        User user = findUser(id);
+        user.setAlta(false);
+        user.setUnsubscription(new Date());
     }
-    
+
     @Transactional
     public void updateRole(User user) throws MiException {
-        if (user != null && user.getRole().name().equals("ADMIN")) {
-            user.setRole(Roles.ADMIN);
-            
-        } else if (user != null && user.getRole().name().equals("PROVIDER")) {
-            user.setProfession(null);
-            user.setPhone("");
-            user.setRating(0);
-            user.setDescription("");
-            user.setRole(Roles.CUSTOMER);
-            
-        } else if (user != null && user.getRole().name().equals("CUSTOMER")){
-            user.setRole(Roles.PROVIDER);
+        if (user == null) {
+            throw new MiException("Usuario no encontrado");
         }
+
+        if (user.getRole() == Roles.PROVIDER) {
+            clearProviderFields(user);
+            user.setRole(Roles.CUSTOMER);
+        } else if (user.getRole() == Roles.CUSTOMER) {
+            user.setRole(Roles.PROVIDER);
+            user.setRating(0);
+        }
+
         userRepository.save(user);
     }
 
     @Transactional
     public void updateaAlta(User user) throws MiException {
-        if (user.getAlta()) {
-            user.setAlta(false);
-        }else{
-            user.setAlta(true);
+        if (user == null) {
+            throw new MiException("Usuario no encontrado");
+        }
+        user.setAlta(!Boolean.TRUE.equals(user.getAlta()));
+        if (Boolean.TRUE.equals(user.getAlta())) {
+            user.setUnsubscription(null);
+        } else {
+            user.setUnsubscription(new Date());
         }
         userRepository.save(user);
     }
 
+    @Transactional(readOnly = true)
     public User getById(String id) throws MiException {
-        try {
-            return userRepository.findById(id).get();
-        } catch (Exception e) {
-            throw new MiException("Usuario no encontrado");
-        }
+        return findUser(id);
     }
 
+    @Transactional(readOnly = true)
     public User getByEmail(String email) throws MiException {
-        try {
-            return userRepository.searchByEmail(email);
-        } catch (Exception e) {
+        User user = userRepository.searchByEmail(email);
+        if (user == null) {
             throw new MiException("Usuario no encontrado");
         }
+        return user;
     }
 
-    public List<User> userList() throws MiException {
-
-        List<User> usersList = new ArrayList<>();
-
-        usersList = userRepository.findAll();
-
-        return usersList;
+    @Transactional(readOnly = true)
+    public List<User> userList() {
+        return userRepository.findAll();
     }
 
-    @Transactional
-    public List<User> providerList() throws MiException {
-
-        List<User> providersList = new ArrayList<>();
-        providersList = userRepository.findByRole(Roles.PROVIDER);
-        return providersList;
+    @Transactional(readOnly = true)
+    public List<User> providerList() {
+        return userRepository.findByRole(Roles.PROVIDER);
     }
 
-    public List<User> AllProviderAlta() throws MiException {
-        try {
-            return userRepository.AllProviderAlta();
-        } catch (Exception e) {
-            throw new MiException("ERROR AL CARGAR LOS PROVIDERS");
-        }
+    @Transactional(readOnly = true)
+    public List<User> AllProviderAlta() {
+        return userRepository.AllProviderAlta();
     }
 
-    public List<User> ProfessionAlta(Professions professions) throws MiException {
-        try {
-            List<User> searchItems = null;
-
-            searchItems = userRepository.searchByProfessionAlta(professions);
-
-            return searchItems;
-        } catch (Exception e) {
-            throw new MiException("ERROR AL CARGAR LOS PROVIDERS DE LA PROFESION: " + professions.name());
-        }
+    @Transactional(readOnly = true)
+    public List<User> ProfessionAlta(Professions profession) {
+        return userRepository.searchByProfessionAlta(profession);
     }
 
-    public List<User> AllProfessionAltaFiltro(Professions professions, String search) throws MiException {
-        try {
-            
-            List<User> searchItems = userRepository.searchByAllProfessionAltaFiltro(professions, search);
-            
-            return searchItems;
-        } catch (Exception e) {
-            throw new MiException("ERROR AL CARGAR LOS PROVIDERS DE LA PROFESION: " + professions.name()
-                    + ", CON EL FILTRO: " + search);
-        }
+    @Transactional(readOnly = true)
+    public List<User> AllProfessionAltaFiltro(Professions profession, String search) {
+        return userRepository.searchByAllProfessionAltaFiltro(profession, search);
     }
 
-    public List<User> AllAltaFiltro(String search) throws MiException {
-        try {
-            List<User> searchItems = null;
-            searchItems = userRepository.searchByAllAltaFiltro(search);
-            return searchItems;
-        } catch (Exception e) {
-            throw new MiException("ERROR AL CARGAR LOS PROVIDERS CON EL FILTRO: " + search);
-        }
+    @Transactional(readOnly = true)
+    public List<User> AllAltaFiltro(String search) {
+        return userRepository.searchByAllAltaFiltro(search);
     }
 
-    @Transactional
-    public List<User> providersAndCustomers() throws MiException {
-
-        List<User> onlyUsers = new ArrayList<>();
-
-        try {
-
-            for (User user : userRepository.findAll()) {
-                if (!user.getRole().toString().equals("ADMIN")) {
-                    onlyUsers.add(user);
-                }
+    @Transactional(readOnly = true)
+    public List<User> providersAndCustomers() {
+        List<User> users = new ArrayList<>();
+        for (User user : userRepository.findAll()) {
+            if (user.getRole() != Roles.ADMIN) {
+                users.add(user);
             }
-
-        } catch (Exception e) {
-            throw new MiException("ERROR AL GUARDAR CUSTOMER Y PROVIDERS (ALGUN ROL VACIO EN DB?)");
         }
+        return users;
+    }
 
-        return onlyUsers;
+    @Transactional(readOnly = true)
+    public boolean validateEmail(User user) {
+        return user != null
+                && user.getEmail() != null
+                && userRepository.searchByEmail(user.getEmail()) != null;
     }
 
     @Transactional
-    public boolean validateEmail(User user) throws MiException {
-
-        boolean validator = false;
-
-        if (userRepository.searchByEmail(user.getEmail()) != null) {
-            validator = true;
+    public void updateRating(User provider) {
+        if (provider == null) {
+            return;
         }
-        // si el validador se vuelve verdadero, es porque hay coincidencia de emails.
-        return validator;
 
-    }
-
-    @Transactional
-    public void updateRating(User Provider){
-
-        int totalWorksReviewd = 0;
-        double sumWorksReviewd = 0;
-
-        List<Work> totalWorks = workRepository.getWorkByUserProvider(Provider);
-
-        for (int i = 0; i < totalWorks.size() ; i++) {
-            if (totalWorks.get(i).getWorkStatus().toString().equals("REVIEWD")) {
-                totalWorksReviewd ++;
-                sumWorksReviewd = sumWorksReviewd + totalWorks.get(i).getRatingWork();
+        List<Work> reviewedWorks = new ArrayList<>();
+        for (Work work : workRepository.getWorkByUserProvider(provider)) {
+            if (work.getWorkStatus() == WorkStatus.REVIEWD) {
+                reviewedWorks.add(work);
             }
         }
 
-        double prom = sumWorksReviewd/totalWorksReviewd;
-        int roundedProm = (int) Math.round(prom);
-
-        Optional <User> consultUser = userRepository.findById(Provider.getId());
-
-        if (consultUser.isPresent()) {
-            User updateUserRating = consultUser.get();
-            updateUserRating.setRating(roundedProm);
-            userRepository.save(updateUserRating);
+        int rating = 0;
+        if (!reviewedWorks.isEmpty()) {
+            double average = reviewedWorks.stream()
+                    .mapToInt(Work::getRatingWork)
+                    .average()
+                    .orElse(0);
+            rating = (int) Math.round(average);
         }
 
+        User persistedProvider = userRepository.findById(provider.getId()).orElse(null);
+        if (persistedProvider != null) {
+            persistedProvider.setRating(rating);
+            userRepository.save(persistedProvider);
+        }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-
         User user = userRepository.searchByEmail(email);
 
-        if (user != null && user.getAlta()) {
-
-            List<GrantedAuthority> authorities = new ArrayList();
-
-            GrantedAuthority p = new SimpleGrantedAuthority("ROLE_" + user.getRole().toString());
-
-            authorities.add(p);
-
-            ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-
-            HttpSession session = attr.getRequest().getSession(true);
-
-            session.setAttribute("userSession", user);
-
-            return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
-                    authorities);
-
-        } else {
-            return null;
+        if (user == null || !Boolean.TRUE.equals(user.getAlta())) {
+            throw new UsernameNotFoundException("Usuario no encontrado o inactivo");
         }
+
+        List<GrantedAuthority> authorities = List.of(
+                new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
+
+        ServletRequestAttributes attributes =
+                (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes != null) {
+            HttpSession session = attributes.getRequest().getSession(true);
+            session.setAttribute("userSession", user);
+        }
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                authorities);
+    }
+
+    private User findUser(String id) throws MiException {
+        if (id == null || id.trim().isEmpty()) {
+            throw new MiException("El identificador del usuario es obligatorio");
+        }
+        return userRepository.findById(id)
+                .orElseThrow(() -> new MiException("Usuario no encontrado"));
+    }
+
+    private void toggleCustomerProvider(User user) {
+        if (user.getRole() == Roles.CUSTOMER) {
+            user.setRole(Roles.PROVIDER);
+            user.setRating(0);
+        } else if (user.getRole() == Roles.PROVIDER) {
+            clearProviderFields(user);
+            user.setRole(Roles.CUSTOMER);
+        }
+    }
+
+    private void clearProviderFields(User user) {
+        user.setDescription(null);
+        user.setProfession(null);
+        user.setPhone(null);
+        user.setRating(0);
+    }
+
+    private void replaceImage(User user, Image image) throws MiException {
+        if (user.getImage() != null) {
+            imageService.Delete(user.getImage());
+        }
+        imageService.Save(image);
+        user.setImage(image.getId());
+    }
+
+    private String normalizeOptionalText(String value) {
+        return value == null ? null : value.trim();
     }
 }
