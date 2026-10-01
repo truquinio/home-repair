@@ -42,9 +42,14 @@ public class PortalController {
     }
 
     @GetMapping("/login")
-    public String login(@RequestParam(required = false) String error, Model model) {
-        if (error != null) {
-            model.addAttribute("mssg", "Usuario o contraseña inválidos 🚫");
+    public String login(
+            @RequestParam(required = false) String error,
+            @RequestParam(required = false) String inactive,
+            Model model) {
+        if (inactive != null) {
+            model.addAttribute("mssg", "La cuenta está inactiva. Volvé a iniciar sesión cuando sea reactivada.");
+        } else if (error != null) {
+            model.addAttribute("mssg", "Usuario o contraseña inválidos.");
         }
         return "login";
     }
