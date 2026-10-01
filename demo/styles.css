@@ -150,12 +150,14 @@ img{max-width:100%;display:block}
 .field input:focus,.field select:focus,.field textarea:focus,.filters input:focus,.filters select:focus{outline:3px solid rgba(52,72,212,.11);border-color:var(--primary)}
 .form-card{max-width:690px;margin:20px auto;padding:30px}
 .form-error{color:var(--danger);font-weight:600}
-.demo-users{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0}
-.demo-user{display:grid;grid-template-columns:44px 1fr;align-items:center;gap:11px;padding:12px;border:1px solid var(--border);border-radius:16px;background:#fff;text-align:left}
+.demo-users{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:22px 0}
+.demo-user{display:grid;grid-template-columns:44px minmax(0,1fr);align-items:center;gap:11px;min-width:0;padding:12px;border:1px solid var(--border);border-radius:16px;background:#fff;text-align:left}
 .demo-user:hover{border-color:#bec7ff;background:#fafbff}
 .demo-user img{width:44px;height:44px;border-radius:50%;object-fit:cover}
+.demo-user>span{min-width:0}
 .demo-user strong,.demo-user span{display:block}
 .demo-user span{font-size:.8rem;color:var(--muted);margin-top:3px}
+.demo-user>span>span{overflow-wrap:anywhere;word-break:break-word}
 .profile{display:grid;grid-template-columns:220px 1fr;gap:34px;align-items:start;padding:30px}
 .profile-image{width:190px;height:190px;border-radius:50%;object-fit:cover;background:#e4e7ec;border:6px solid #fff;box-shadow:var(--shadow-md)}
 .profile h1{margin:.35em 0 .2em}
@@ -196,9 +198,12 @@ footer{padding:28px 20px;text-align:center;border-top:1px solid rgba(0,0,0,.07);
   .grid{grid-template-columns:repeat(2,minmax(0,1fr))}.service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .filters{grid-template-columns:1fr}.work-card{grid-template-columns:1fr}.about,.profile{grid-template-columns:1fr}
 }
+@media(max-width:760px){
+  .demo-users{grid-template-columns:1fr}
+}
 @media(max-width:640px){
   .nav-inner{align-items:flex-start}.nav-links{font-size:.88rem}.container{padding:26px 16px 56px}
-  .grid,.service-grid,.demo-users,.stats{grid-template-columns:1fr}.hero h1{font-size:3.5rem}
+  .grid,.service-grid,.stats{grid-template-columns:1fr}.hero h1{font-size:3.5rem}
   .profile{text-align:left}.profile-image{margin:0}.avatar-editor{align-items:flex-start;flex-direction:column}
   .section-header{display:block}
 }
