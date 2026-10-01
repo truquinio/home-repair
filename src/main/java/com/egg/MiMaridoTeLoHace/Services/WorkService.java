@@ -1,21 +1,16 @@
 package com.egg.MiMaridoTeLoHace.Services;
 
+import com.egg.MiMaridoTeLoHace.Entities.User;
 import com.egg.MiMaridoTeLoHace.Entities.Work;
+import com.egg.MiMaridoTeLoHace.Enums.Roles;
 import com.egg.MiMaridoTeLoHace.Enums.WorkStatus;
 import com.egg.MiMaridoTeLoHace.Exceptions.MiException;
 import com.egg.MiMaridoTeLoHace.Repositories.WorkRepository;
-import java.util.Arrays;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
 public class WorkService {
-
-    private static final WorkStatus[] EDITABLE_STATUSES = {
-            WorkStatus.REVERT,
-            WorkStatus.ACCEPTED,
-            WorkStatus.DONE
-    };
 
     private final WorkRepository workRepository;
 
@@ -25,8 +20,8 @@ public class WorkService {
 
     @Transactional
     public void createWork(Work work) throws MiException {
-        if (work == null) {
-            throw new MiException("La solicitud de trabajo no puede ser nula");
+        if (work == null || work.getUserCustomerId() == null || work.getUserProviderId() == null) {
+            throw new MiException("La solicitud de trabajo no es válida");
         }
 
         work.setWorkStatus(WorkStatus.REQUIRED);
@@ -38,19 +33,28 @@ public class WorkService {
         workRepository.delete(findById(id));
     }
 
-    public Work getById(String id) {
-        try {
-            return findById(id);
-        } catch (MiException e) {
-            throw new IllegalArgumentException(e.getMessage(), e);
-        }
+    public Work getById(String id) throws MiException {
+        return findById(id);
     }
 
     @Transactional
-    public void changeWorkStatus(String id, String requestedStatus) throws MiException {
-        WorkStatus status = parseEditableStatus(requestedStatus);
+    public void changeWorkStatus(String id, String requestedStatus, User actor) throws MiException {
+        if (actor == null) {
+            throw new MiException("Debés iniciar sesión");
+        }
+
         Work work = findById(id);
-        work.setWorkStatus(status);
+        WorkStatus nextStatus = parseEditableStatus(requestedStatus);
+
+        if (!canAccess(work, actor)) {
+            throw new MiException("No tenés permisos para modificar este trabajo");
+        }
+
+        if (actor.getRole() != Roles.ADMIN && !isAllowedTransition(work, nextStatus, actor)) {
+            throw new MiException("La transición de estado solicitada no está permitida");
+        }
+
+        work.setWorkStatus(nextStatus);
     }
 
     private Work findById(String id) throws MiException {
@@ -69,13 +73,49 @@ public class WorkService {
 
         try {
             WorkStatus status = WorkStatus.valueOf(value);
-            boolean allowed = Arrays.stream(EDITABLE_STATUSES).anyMatch(status::equals);
-            if (!allowed) {
+            if (status != WorkStatus.REVERT
+                    && status != WorkStatus.ACCEPTED
+                    && status != WorkStatus.DONE) {
                 throw new MiException("Transición de estado no permitida");
             }
             return status;
         } catch (IllegalArgumentException ex) {
             throw new MiException("Estado de trabajo inválido: " + value);
         }
+    }
+
+    private boolean canAccess(Work work, User actor) {
+        if (actor.getRole() == Roles.ADMIN) {
+            return true;
+        }
+
+        if (actor.getRole() == Roles.CUSTOMER) {
+            return work.getUserCustomerId() != null
+                    && actor.getId().equals(work.getUserCustomerId().getId());
+        }
+
+        if (actor.getRole() == Roles.PROVIDER) {
+            return work.getUserProviderId() != null
+                    && actor.getId().equals(work.getUserProviderId().getId());
+        }
+
+        return false;
+    }
+
+    private boolean isAllowedTransition(Work work, WorkStatus next, User actor) {
+        WorkStatus current = work.getWorkStatus();
+
+        if (current == WorkStatus.REQUIRED) {
+            if (next == WorkStatus.REVERT) {
+                return actor.getRole() == Roles.CUSTOMER || actor.getRole() == Roles.PROVIDER;
+            }
+            return next == WorkStatus.ACCEPTED && actor.getRole() == Roles.PROVIDER;
+        }
+
+        if (current == WorkStatus.ACCEPTED) {
+            return next == WorkStatus.DONE || next == WorkStatus.REVERT;
+        }
+
+        return false;
     }
 }
