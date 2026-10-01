@@ -217,6 +217,29 @@ class UserServiceTest {
     }
 
     @Test
+    void createUserPersistsCustomAvatarWhenProvided() throws Exception {
+        User user = validUser("custom-avatar@example.test");
+        Image customAvatar = new Image();
+        customAvatar.setName("avatar.jpg");
+        customAvatar.setMime("image/jpeg");
+        customAvatar.setContent(new byte[] {(byte) 0xFF, (byte) 0xD8, (byte) 0xFF});
+
+        when(userRepository.findByEmailIgnoreCase("custom-avatar@example.test")).thenReturn(null);
+        doAnswer(invocation -> {
+            customAvatar.setId("custom-image-1");
+            return null;
+        }).when(imageService).save(customAvatar);
+        when(passwordEncoder.encode("secret123")).thenReturn("hashed-secret");
+        when(userRepository.save(user)).thenReturn(user);
+
+        userService.createUser(user, customAvatar);
+
+        verify(imageService).save(customAvatar);
+        assertEquals("custom-image-1", user.getImage());
+        assertEquals("hashed-secret", user.getPassword());
+    }
+
+    @Test
     void createCustomerPersistsDefaultAvatarBeforeAssigningItsId() throws Exception {
         User user = validUser("lucia@example.test");
         Image defaultAvatar = new Image();
