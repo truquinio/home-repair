@@ -6,6 +6,8 @@ This audit covers the Java/Spring backend, security configuration, Thymeleaf vie
 
 ## High-impact issues corrected
 
+- Renamed the historical Java package to `com.egg.homerepair` and normalized subpackages.
+- Renamed the application bootstrap to `HomeRepairApplication`.
 - Removed hardcoded database password from versioned configuration.
 - Re-enabled CSRF protection by removing the global CSRF disable.
 - Replaced broad public route access with explicit public routes plus authenticated fallback.
@@ -30,6 +32,11 @@ This audit covers the Java/Spring backend, security configuration, Thymeleaf vie
 - Added a functional static demo with local persistence and reset.
 - Added CI with MySQL plus a GitHub Pages artifact build.
 - Added regression tests for work authorization/status rules.
+- Rejected spoofed image uploads by validating JPEG/PNG/WebP signatures.
+- Added optional profile-image upload during Java registration.
+- Invalidated sessions after self role changes/deactivation.
+- Added protected-route enforcement for accounts deactivated while already logged in.
+- Filtered provider-profile comments to actual reviewed jobs only.
 
 ## Dependency decisions
 
@@ -62,12 +69,6 @@ using browser storage. This makes the product flow testable but is not productio
 The Java backend remains the reference implementation for server-side behavior.
 
 ## Remaining technical debt
-
-### Package name
-
-The historical Java package `com.egg.MiMaridoTeLoHace` does not follow modern lowercase package naming conventions.
-
-Renaming it would touch nearly every Java file and directory. It is intentionally not mixed into this functional/security refactor because it offers little runtime benefit and would increase migration risk.
 
 ### Spring generation
 

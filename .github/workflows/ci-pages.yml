@@ -24,7 +24,7 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_DATABASE: mimaridotelohace
+          MYSQL_DATABASE: home_repair
           MYSQL_ROOT_PASSWORD: root
         ports:
           - 3306:3306
@@ -34,7 +34,7 @@ jobs:
           --health-timeout=5s
           --health-retries=10
     env:
-      DB_URL: jdbc:mysql://127.0.0.1:3306/mimaridotelohace?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+      DB_URL: jdbc:mysql://127.0.0.1:3306/home_repair?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
       DB_USERNAME: root
       DB_PASSWORD: root
       JPA_DDL_AUTO: create-drop
@@ -66,6 +66,7 @@ jobs:
           test -s public/index.html
           test -s public/styles.css
           test -s public/app.js
+          node --check public/app.js
           ! grep -R "/src/main/resources" public/index.html public/app.js public/styles.css
           ! grep -R "provider-avatar-blue.png" public/app.js
       - name: Upload Pages artifact

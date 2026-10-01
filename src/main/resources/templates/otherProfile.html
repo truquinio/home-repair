@@ -40,8 +40,8 @@
                th:if="${review.review != null}">
         <div class="card-body">
           <h3 class="card-title">
-            <img th:src="@{'/image/DB/' + ${review.userCustomerId.image}}" alt="" class="imagen-customer">
-            <span th:text="${review.userCustomerId.name + ' ' + review.userCustomerId.lastname}"></span>
+            <img th:src="@{'/image/DB/' + ${review.customer.image}}" alt="" class="imagen-customer">
+            <span th:text="${review.customer.name + ' ' + review.customer.lastname}"></span>
           </h3>
           <p th:text="${review.review}"></p>
           <p aria-label="Puntuación">
