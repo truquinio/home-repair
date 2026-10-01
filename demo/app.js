@@ -145,7 +145,7 @@ function home(){
   </section>
 
   <section class="section work-zone" aria-labelledby="work-zone-title">
-    <div class="section-header"><div><span class="eyebrow">Cobertura</span><h2 id="work-zone-title" class="section-title">Zona de trabajo</h2><p class="section-copy">Servicios disponibles en Barcelona y su área metropolitana.</p></div></div>
+    <div class="section-header section-header-centered"><div><span class="eyebrow">Cobertura</span><h2 id="work-zone-title" class="section-title">Zona de trabajo</h2><p class="section-copy">Servicios disponibles en Barcelona y su área metropolitana.</p></div></div>
     <div class="map-card">
       <iframe src="https://www.google.com/maps?q=Barcelona%2C%20Espa%C3%B1a&z=11&output=embed" title="Mapa de zona de trabajo de Home Repair en Barcelona" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
     </div>

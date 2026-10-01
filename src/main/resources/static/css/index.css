@@ -34,12 +34,37 @@ main {
   justify-content: center;
 }
 
+.work-zone-section {
+  text-align: center;
+  margin-top: 4rem;
+}
+
+.section-kicker {
+  margin: 0 0 .5rem;
+  color: #4050e1;
+  font-size: .85rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.work-zone-title {
+  margin: 0;
+}
+
+.work-zone-copy {
+  max-width: 42rem;
+  margin: .75rem auto 1.75rem;
+  color: #666;
+  line-height: 1.6;
+}
+
 .map {
   width: 100%;
-  height: 300px;
+  height: 360px;
   border: 0;
-  border-radius: 50px;
-  box-shadow: 0 10px 13px -7px #000;
+  border-radius: 32px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .14);
 }
 
 .providers {

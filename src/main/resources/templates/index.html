@@ -16,9 +16,9 @@
       <div class="row">
         <div class="col left-col">
           <h1 class="big-title">Home Repair</h1>
-          <h4 class="subtitle">Reparaciones hogareñas</h4>
+          <h4 class="subtitle">Reparaciones del hogar</h4>
 
-          <a class="btn btn-warning button" href="/user/register" role="button">📝Registrate</a>
+          <a class="btn btn-warning button" href="/user/register" role="button">📝 Regístrate</a>
         </div>
         <div class="col">
           <img class="image" src="/img/homeRepair.svg" alt="home repair">
@@ -34,9 +34,10 @@
     </section>
 
     <!-- NEIGHBORHOOD MAP >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
-    <section>
-      <h3 class="title">Zona de trabajo</h3>
-
+    <section class="work-zone-section" aria-labelledby="work-zone-title">
+      <p class="section-kicker">Cobertura</p>
+      <h2 id="work-zone-title" class="title work-zone-title">Zona de trabajo</h2>
+      <p class="work-zone-copy">Servicios disponibles en Barcelona y su área metropolitana.</p>
       <div th:replace="th_templates/map :: map"></div>
     </section>
 
