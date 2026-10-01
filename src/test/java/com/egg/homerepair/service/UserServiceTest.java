@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import com.egg.homerepair.entity.Image;
 import com.egg.homerepair.entity.User;
+import com.egg.homerepair.enums.Roles;
 import com.egg.homerepair.exception.MiException;
 import com.egg.homerepair.repository.UserRepository;
 import com.egg.homerepair.repository.WorkRepository;
@@ -72,6 +73,35 @@ class UserServiceTest {
 
         assertEquals("La contraseña debe tener al menos 6 caracteres", error.getMessage());
         verifyNoInteractions(imageService, passwordEncoder);
+    }
+
+    @Test
+    void customerCannotBecomeProviderWithoutProfession() {
+        User customer = validUser("customer@example.test");
+        customer.setId("customer-1");
+        customer.setRole(Roles.CUSTOMER);
+
+        MiException error = assertThrows(
+                MiException.class,
+                () -> userService.toggleRole(customer));
+
+        assertEquals("Elegí una profesión antes de convertir la cuenta en proveedor", error.getMessage());
+    }
+
+    @Test
+    void adminAccountCannotBeDeactivated() {
+        User admin = validUser("admin@example.test");
+        admin.setId("admin-1");
+        admin.setRole(Roles.ADMIN);
+        admin.setAlta(true);
+
+        when(userRepository.findById("admin-1")).thenReturn(java.util.Optional.of(admin));
+
+        MiException error = assertThrows(
+                MiException.class,
+                () -> userService.deactivateUser("admin-1"));
+
+        assertEquals("Las cuentas administrativas no pueden desactivarse desde esta acción", error.getMessage());
     }
 
     @Test
