@@ -81,6 +81,8 @@ class WorkServiceTest {
         submitted.setId("existing-work-id");
         submitted.setUserCustomerId(customer);
         submitted.setUserProviderId(provider);
+        submitted.setWorkName("Repair leak");
+        submitted.setWorkDescription("Water is leaking under the sink.");
 
         workService.createWork(submitted);
 
