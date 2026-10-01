@@ -66,7 +66,7 @@ function home(){
   const user=currentUser();
   layout(`<section class="hero">
     <div><span class="badge">Demo funcional</span>
-      <h1>Mi marido<br>te lo hace</h1>
+      <h1>Home Repair</h1>
       <p>${user?`Hola ${escapeHtml(user.name)}. Probá los flujos de Home Repair con datos persistentes en tu navegador.`:"Reparaciones hogareñas. Encontrá profesionales, solicitá trabajos y calificá el servicio."}</p>
       <div class="actions">
         <a class="btn" href="#providers">🧰 Buscar servicios</a>
