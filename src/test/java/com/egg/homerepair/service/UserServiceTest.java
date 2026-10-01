@@ -1,6 +1,7 @@
 package com.egg.homerepair.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,6 +37,28 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         userService = new UserService(userRepository, imageService, workRepository, passwordEncoder);
+    }
+
+    @Test
+    void createUserIgnoresClientSuppliedId() throws Exception {
+        User user = new User();
+        user.setId("existing-user-id");
+        user.setName("Lucia");
+        user.setLastname("Gomez");
+        user.setEmail("lucia-id@example.test");
+        user.setPassword("secret123");
+
+        Image defaultAvatar = new Image();
+        defaultAvatar.setId("image-1");
+
+        when(userRepository.findByEmailIgnoreCase("lucia-id@example.test")).thenReturn(null);
+        when(imageService.getByName("customer-avatar.png")).thenReturn(defaultAvatar);
+        when(passwordEncoder.encode("secret123")).thenReturn("hashed-secret");
+        when(userRepository.save(user)).thenReturn(user);
+
+        userService.createUser(user);
+
+        assertNull(user.getId());
     }
 
     @Test

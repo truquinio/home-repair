@@ -73,7 +73,11 @@ const allowedWorkTransition=(actor,work,next)=>{
   if(work.status==="ACCEPTED"&&["DONE","REVERT"].includes(next))return ownsCustomer||ownsProvider;
   return false;
 };
-const go=route=>{location.hash=route};
+const go=target=>{
+  const next=`#${target}`;
+  if(location.hash===next){route();return}
+  location.hash=target;
+};
 const toast=message=>{toastEl.textContent=message;toastEl.classList.add("show");setTimeout(()=>toastEl.classList.remove("show"),2400)};
 
 async function imageFileToAvatar(file){

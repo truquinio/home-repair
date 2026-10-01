@@ -1,7 +1,9 @@
 package com.egg.homerepair.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.egg.homerepair.entity.User;
@@ -40,6 +42,20 @@ class WorkServiceTest {
         work.setUserCustomerId(customer);
         work.setUserProviderId(provider);
         work.setWorkStatus(WorkStatus.REQUIRED);
+    }
+
+    @Test
+    void createWorkIgnoresClientSuppliedId() throws MiException {
+        Work submitted = new Work();
+        submitted.setId("existing-work-id");
+        submitted.setUserCustomerId(customer);
+        submitted.setUserProviderId(provider);
+
+        workService.createWork(submitted);
+
+        assertNull(submitted.getId());
+        assertEquals(WorkStatus.REQUIRED, submitted.getWorkStatus());
+        verify(workRepository).save(submitted);
     }
 
     @Test
