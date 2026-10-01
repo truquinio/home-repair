@@ -178,7 +178,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/list")
-    public String listUsers(ModelMap model) {
+    public String listUsers(Model model) {
         model.addAttribute("users", userService.userList());
         return "userList";
     }
