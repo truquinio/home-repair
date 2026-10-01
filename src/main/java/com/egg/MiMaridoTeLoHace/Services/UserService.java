@@ -64,8 +64,6 @@ public class UserService implements UserDetailsService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
 
             userRepository.save(user);
-        } catch (MiException e) {
-            throw e;
         } catch (Exception e) {
             throw new MiException("Error al crear usuario");
         }
