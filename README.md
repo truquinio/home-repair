@@ -22,6 +22,7 @@ Permite probar los principales flujos del producto directamente en el navegador:
   <img width="620" alt="Home Repair - administración" src="https://github.com/user-attachments/assets/8383a2de-c682-499d-a053-579ac071276e" />
   <img width="620" alt="Home Repair - perfiles" src="https://github.com/user-attachments/assets/1f6043df-f8a4-425e-94ac-23a498f3efd1" />
 </p>
+
 ## Proyecto original
 
 La aplicación original es un proyecto full stack desarrollado con:
@@ -53,7 +54,7 @@ La aplicación original es un proyecto full stack desarrollado con:
 ```text
 .
 ├── src/                         # Aplicación Java/Spring Boot original
-│   ├── main/java/               # Backend
+│   ├── main/java/com/egg/homerepair/ # Backend
 │   ├── main/resources/
 │   │   ├── static/              # CSS, JS e imágenes
 │   │   └── templates/           # Vistas Thymeleaf
@@ -96,15 +97,27 @@ En Windows:
 
 ## Ejecutar la demo localmente
 
-La demo no requiere Node, Java ni MySQL. Puede servirse con cualquier servidor HTTP estático.
-
-Por ejemplo:
+La demo no requiere Node, Java ni MySQL, pero el artefacto publicado reutiliza las imágenes de la aplicación Java. Para reproducir localmente el mismo artefacto que GitHub Pages:
 
 ```bash
-python -m http.server 8080 --directory demo
+rm -rf public
+mkdir -p public/img
+cp demo/index.html demo/styles.css demo/app.js public/
+cp -R src/main/resources/static/img/. public/img/
+python -m http.server 8080 --directory public
 ```
 
-y abrir `http://localhost:8080`.
+En PowerShell:
+
+```powershell
+Remove-Item public -Recurse -Force -ErrorAction SilentlyContinue
+New-Item -ItemType Directory -Force public/img | Out-Null
+Copy-Item demo/index.html,demo/styles.css,demo/app.js public/
+Copy-Item src/main/resources/static/img/* public/img/ -Recurse
+python -m http.server 8080 --directory public
+```
+
+Después abre `http://localhost:8080`.
 
 ### Cuentas demo
 
