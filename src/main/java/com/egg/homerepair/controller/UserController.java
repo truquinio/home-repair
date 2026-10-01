@@ -191,7 +191,10 @@ public class UserController {
     }
 
     private void addReviews(Model model, User user) {
-        List<Work> reviews = workRepository.findByProvider(user);
+        List<Work> reviews = workRepository.findByProvider(user).stream()
+                .filter(work -> work.getWorkStatus() == com.egg.homerepair.enums.WorkStatus.REVIEWD)
+                .filter(work -> work.getReview() != null && !work.getReview().trim().isEmpty())
+                .toList();
         model.addAttribute("check", reviews.isEmpty() ? "false" : "");
         model.addAttribute("listReviews", reviews);
     }
