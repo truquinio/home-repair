@@ -47,6 +47,9 @@ public class UserService implements UserDetailsService {
         if (user == null) {
             throw new MiException("El usuario no puede ser nulo");
         }
+
+        validateNewUser(user);
+
         if (emailExists(user.getEmail())) {
             throw new MiException("El email ya se encuentra registrado");
         }
@@ -223,6 +226,32 @@ public class UserService implements UserDetailsService {
                 user.getEmail(),
                 user.getPassword(),
                 authorities);
+    }
+
+    private void validateNewUser(User user) throws MiException {
+        user.setName(normalizeRequired(user.getName(), "El nombre es obligatorio"));
+        user.setLastname(normalizeRequired(user.getLastname(), "El apellido es obligatorio"));
+
+        String email = normalizeRequired(user.getEmail(), "El email es obligatorio").toLowerCase();
+        if (!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            throw new MiException("El email no es válido");
+        }
+        user.setEmail(email);
+
+        String password = user.getPassword();
+        if (password == null || password.length() < 6) {
+            throw new MiException("La contraseña debe tener al menos 6 caracteres");
+        }
+        if (password.length() > 72) {
+            throw new MiException("La contraseña no puede superar 72 caracteres");
+        }
+    }
+
+    private String normalizeRequired(String value, String message) throws MiException {
+        if (value == null || value.trim().isEmpty()) {
+            throw new MiException(message);
+        }
+        return value.trim();
     }
 
     private User findUser(String id) throws MiException {

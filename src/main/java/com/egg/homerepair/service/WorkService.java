@@ -23,8 +23,26 @@ public class WorkService {
         if (work == null || work.getUserCustomerId() == null || work.getUserProviderId() == null) {
             throw new MiException("La solicitud de trabajo no es válida");
         }
+        if (work.getUserCustomerId().getRole() != Roles.CUSTOMER
+                || work.getUserProviderId().getRole() != Roles.PROVIDER) {
+            throw new MiException("Los participantes del trabajo no son válidos");
+        }
+
+        String name = normalizeRequired(work.getWorkName(), "El título del trabajo es obligatorio");
+        String description = normalizeRequired(
+                work.getWorkDescription(),
+                "La descripción del trabajo es obligatoria");
+
+        if (name.length() > 100) {
+            throw new MiException("El título del trabajo no puede superar 100 caracteres");
+        }
+        if (description.length() > 700) {
+            throw new MiException("La descripción del trabajo no puede superar 700 caracteres");
+        }
 
         work.setId(null);
+        work.setWorkName(name);
+        work.setWorkDescription(description);
         work.setWorkStatus(WorkStatus.REQUIRED);
         workRepository.save(work);
     }
@@ -51,11 +69,18 @@ public class WorkService {
             throw new MiException("No tenés permisos para modificar este trabajo");
         }
 
-        if (actor.getRole() != Roles.ADMIN && !isAllowedTransition(work, nextStatus, actor)) {
+        if (!isAllowedTransition(work, nextStatus, actor)) {
             throw new MiException("La transición de estado solicitada no está permitida");
         }
 
         work.setWorkStatus(nextStatus);
+    }
+
+    private String normalizeRequired(String value, String message) throws MiException {
+        if (value == null || value.trim().isEmpty()) {
+            throw new MiException(message);
+        }
+        return value.trim();
     }
 
     private Work findById(String id) throws MiException {
