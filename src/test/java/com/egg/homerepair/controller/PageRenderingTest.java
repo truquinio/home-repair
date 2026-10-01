@@ -8,18 +8,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.egg.homerepair.entity.User;
 import com.egg.homerepair.enums.Roles;
+import com.egg.homerepair.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 class PageRenderingTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     void publicPagesRenderWithoutTemplateErrors() throws Exception {
@@ -47,9 +53,11 @@ class PageRenderingTest {
         sessionUser.setName("Lucia");
         sessionUser.setLastname("Gomez");
         sessionUser.setEmail("lucia@example.test");
+        sessionUser.setPassword("test-password-hash");
         sessionUser.setRole(Roles.CUSTOMER);
         sessionUser.setAlta(true);
         sessionUser.setImage("image-1");
+        userRepository.saveAndFlush(sessionUser);
 
         mockMvc.perform(get("/home")
                         .with(user("lucia@example.test").roles("CUSTOMER"))
