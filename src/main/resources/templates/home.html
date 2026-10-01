@@ -17,8 +17,7 @@
         <div class="col left-col">
 
           <h4>Hola <span th:text="${session.userSession.name}"></span>, te damos la bienvenida a:</h4>
-          <h1 class="big-title">Mi marido<br>
-            te lo hace</h1>
+          <h1 class="big-title">Home Repair</h1>
 
           <div sec:authorize="hasRole('ROLE_CUSTOMER')">
             <button type="button" class="btn btn-warning button btn-index-home"
