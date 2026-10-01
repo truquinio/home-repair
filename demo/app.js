@@ -287,7 +287,7 @@ function reviewForm(workId){
   layout(`<div class="form-card card"><h1 class="page-title">Valorar trabajo</h1><form id="review-form">
   <div class="field"><label for="rating">Puntuación</label><select id="rating" name="rating">${[5,4,3,2,1].map(n=>`<option value="${n}">${n} estrellas</option>`).join("")}</select></div>
   <div class="field"><label for="review">Comentario</label><textarea id="review" name="review" required maxlength="500"></textarea></div>
-  <button class="btn">Publicar valoración</button></form></div>`);
+  <button class="btn" type="submit">Publicar valoración</button></form></div>`);
   document.querySelector("#review-form").addEventListener("submit",event=>{event.preventDefault();const d=new FormData(event.currentTarget);w.rating=Number(d.get("rating"));w.review=String(d.get("review")).trim();w.status="REVIEWD";recalculateRating(w.providerId);persist();toast("Valoración publicada");go("works")});
 }
 function recalculateRating(providerId){const reviewed=state.works.filter(w=>w.providerId===providerId&&w.status==="REVIEWD"&&w.rating>0);const provider=userById(providerId);provider.rating=reviewed.length?Math.round(reviewed.reduce((a,w)=>a+w.rating,0)/reviewed.length):0}
