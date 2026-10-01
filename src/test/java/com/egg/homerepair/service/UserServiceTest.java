@@ -5,10 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import com.egg.homerepair.entity.Image;
 import com.egg.homerepair.entity.User;
+import com.egg.homerepair.exception.MiException;
 import com.egg.homerepair.repository.UserRepository;
 import com.egg.homerepair.repository.WorkRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,38 +43,41 @@ class UserServiceTest {
     }
 
     @Test
-    void createUserRejectsInvalidInput() {
-        User blankName = new User();
-        blankName.setName(" ");
-        blankName.setLastname("Gomez");
-        blankName.setEmail("lucia@example.test");
-        blankName.setPassword("secret123");
+    void createUserRejectsBlankNameBeforeProcessingAvatarOrPassword() {
+        User user = validUser("lucia@example.test");
+        user.setName(" ");
 
-        User badEmail = new User();
-        badEmail.setName("Lucia");
-        badEmail.setLastname("Gomez");
-        badEmail.setEmail("not-an-email");
-        badEmail.setPassword("secret123");
+        MiException error = assertThrows(MiException.class, () -> userService.createUser(user));
 
-        User shortPassword = new User();
-        shortPassword.setName("Lucia");
-        shortPassword.setLastname("Gomez");
-        shortPassword.setEmail("lucia@example.test");
-        shortPassword.setPassword("123");
+        assertEquals("El nombre es obligatorio", error.getMessage());
+        verifyNoInteractions(imageService, passwordEncoder);
+    }
 
-        assertThrows(Exception.class, () -> userService.createUser(blankName));
-        assertThrows(Exception.class, () -> userService.createUser(badEmail));
-        assertThrows(Exception.class, () -> userService.createUser(shortPassword));
+    @Test
+    void createUserRejectsMalformedEmailBeforeProcessingAvatarOrPassword() {
+        User user = validUser("not-an-email");
+
+        MiException error = assertThrows(MiException.class, () -> userService.createUser(user));
+
+        assertEquals("El email no es válido", error.getMessage());
+        verifyNoInteractions(imageService, passwordEncoder);
+    }
+
+    @Test
+    void createUserRejectsShortPasswordBeforeProcessingAvatarOrPassword() {
+        User user = validUser("lucia@example.test");
+        user.setPassword("123");
+
+        MiException error = assertThrows(MiException.class, () -> userService.createUser(user));
+
+        assertEquals("La contraseña debe tener al menos 6 caracteres", error.getMessage());
+        verifyNoInteractions(imageService, passwordEncoder);
     }
 
     @Test
     void createUserIgnoresClientSuppliedId() throws Exception {
-        User user = new User();
+        User user = validUser("lucia-id@example.test");
         user.setId("existing-user-id");
-        user.setName("Lucia");
-        user.setLastname("Gomez");
-        user.setEmail("lucia-id@example.test");
-        user.setPassword("secret123");
 
         Image defaultAvatar = new Image();
         defaultAvatar.setId("image-1");
@@ -89,12 +94,7 @@ class UserServiceTest {
 
     @Test
     void createCustomerPersistsDefaultAvatarBeforeAssigningItsId() throws Exception {
-        User user = new User();
-        user.setName("Lucia");
-        user.setLastname("Gomez");
-        user.setEmail("lucia@example.test");
-        user.setPassword("secret123");
-
+        User user = validUser("lucia@example.test");
         Image defaultAvatar = new Image();
 
         when(userRepository.findByEmailIgnoreCase("lucia@example.test")).thenReturn(null);
@@ -111,5 +111,14 @@ class UserServiceTest {
         verify(imageService).save(defaultAvatar);
         assertEquals("image-1", user.getImage());
         assertEquals("hashed-secret", user.getPassword());
+    }
+
+    private User validUser(String email) {
+        User user = new User();
+        user.setName("Lucia");
+        user.setLastname("Gomez");
+        user.setEmail(email);
+        user.setPassword("secret123");
+        return user;
     }
 }
