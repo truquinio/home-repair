@@ -79,11 +79,20 @@ public class UserService implements UserDetailsService {
     public User modifyUser(String id, User changes, Image image, boolean changeRole)
             throws MiException {
         User original = findUser(id);
+        if (changes == null) {
+            throw new MiException("Los datos del perfil son obligatorios");
+        }
+
+        Roles targetRole = original.getRole();
+        if (changeRole && original.getRole() == Roles.CUSTOMER) {
+            targetRole = Roles.PROVIDER;
+        } else if (changeRole && original.getRole() == Roles.PROVIDER) {
+            targetRole = Roles.CUSTOMER;
+        }
+
+        validateProfileChanges(changes, targetRole);
 
         if (changeRole) {
-            if (original.getRole() == Roles.CUSTOMER && changes.getProfession() == null) {
-                throw new MiException("Elegí una profesión antes de convertir la cuenta en proveedor");
-            }
             toggleCustomerProvider(original);
         }
 
@@ -97,8 +106,8 @@ public class UserService implements UserDetailsService {
             replaceImage(original, image);
         }
 
-        original.setName(changes.getName());
-        original.setLastname(changes.getLastname());
+        original.setName(changes.getName().trim());
+        original.setLastname(changes.getLastname().trim());
 
         if (changes.getPassword() != null && !changes.getPassword().trim().isEmpty()) {
             original.setPassword(passwordEncoder.encode(changes.getPassword()));
@@ -236,17 +245,72 @@ public class UserService implements UserDetailsService {
                 authorities);
     }
 
+    private void validateProfileChanges(User changes, Roles targetRole) throws MiException {
+        String name = normalizeRequired(changes.getName(), "El nombre es obligatorio");
+        String lastname = normalizeRequired(changes.getLastname(), "El apellido es obligatorio");
+        if (name.length() > 60) {
+            throw new MiException("El nombre no puede superar 60 caracteres");
+        }
+        if (lastname.length() > 60) {
+            throw new MiException("El apellido no puede superar 60 caracteres");
+        }
+
+        String password = changes.getPassword();
+        if (password != null && !password.trim().isEmpty()) {
+            validatePassword(password);
+        }
+
+        if (targetRole == Roles.PROVIDER) {
+            if (changes.getProfession() == null) {
+                throw new MiException("La profesión es obligatoria para proveedores");
+            }
+            String phone = normalizeOptionalText(changes.getPhone());
+            String description = normalizeOptionalText(changes.getDescription());
+            if (phone != null && phone.length() > 30) {
+                throw new MiException("El teléfono no puede superar 30 caracteres");
+            }
+            if (description != null && description.length() > 500) {
+                throw new MiException("La descripción no puede superar 500 caracteres");
+            }
+        }
+    }
+
     private void validateNewUser(User user) throws MiException {
-        user.setName(normalizeRequired(user.getName(), "El nombre es obligatorio"));
-        user.setLastname(normalizeRequired(user.getLastname(), "El apellido es obligatorio"));
+        String name = normalizeRequired(user.getName(), "El nombre es obligatorio");
+        String lastname = normalizeRequired(user.getLastname(), "El apellido es obligatorio");
+        if (name.length() > 60) {
+            throw new MiException("El nombre no puede superar 60 caracteres");
+        }
+        if (lastname.length() > 60) {
+            throw new MiException("El apellido no puede superar 60 caracteres");
+        }
+        user.setName(name);
+        user.setLastname(lastname);
 
         String email = normalizeRequired(user.getEmail(), "El email es obligatorio").toLowerCase();
+        if (email.length() > 120) {
+            throw new MiException("El email no puede superar 120 caracteres");
+        }
         if (!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
             throw new MiException("El email no es válido");
         }
         user.setEmail(email);
 
-        String password = user.getPassword();
+        validatePassword(user.getPassword());
+
+        if (user.getProfession() != null) {
+            String phone = normalizeOptionalText(user.getPhone());
+            String description = normalizeOptionalText(user.getDescription());
+            if (phone != null && phone.length() > 30) {
+                throw new MiException("El teléfono no puede superar 30 caracteres");
+            }
+            if (description != null && description.length() > 500) {
+                throw new MiException("La descripción no puede superar 500 caracteres");
+            }
+        }
+    }
+
+    private void validatePassword(String password) throws MiException {
         if (password == null || password.length() < 6) {
             throw new MiException("La contraseña debe tener al menos 6 caracteres");
         }
