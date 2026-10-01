@@ -16,7 +16,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -67,7 +66,7 @@ public class UserController {
     @GetMapping("/perfil/{id}")
     public String profile(
             @PathVariable String id,
-            ModelMap model,
+            Model model,
             HttpSession session) throws MiException {
 
         User target = userService.getById(id);
