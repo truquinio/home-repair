@@ -126,6 +126,10 @@
     providerCard.addEventListener("click", () => selectType(true));
     customerCard.addEventListener("click", () => selectType(false));
 
+    if (document.querySelector(".alert-danger")) {
+      selectType(Boolean(profession.value));
+    }
+
     function validatePassword() {
       password2.setCustomValidity(
         password.value === password2.value ? "" : "Las contraseñas no coinciden"
