@@ -55,6 +55,7 @@ public class UserService implements UserDetailsService {
             boolean provider = user.getProfession() != null;
             Image image = imageService.getByName(
                     provider ? "provider-avatar.png" : "customer-avatar.png");
+            imageService.save(image);
 
             user.setRole(provider ? Roles.PROVIDER : Roles.CUSTOMER);
             user.setRating(0);
