@@ -210,7 +210,7 @@ function register(){
       <div class="field"><label for="name">Nombre</label><input id="name" name="name" required maxlength="60"></div>
       <div class="field"><label for="lastname">Apellido</label><input id="lastname" name="lastname" required maxlength="60"></div>
       <div class="field"><label for="reg-email">Email</label><input id="reg-email" name="email" type="email" required maxlength="120"></div>
-      <div class="field"><label for="reg-password">Contraseña</label><input id="reg-password" name="password" type="password" required minlength="6"></div>
+      <div class="field"><label for="reg-password">Contraseña</label><input id="reg-password" name="password" type="password" required minlength="6" maxlength="72"></div>
       <div class="field"><label for="register-avatar">Foto de perfil <span class="meta">(opcional)</span></label><input id="register-avatar" type="file" accept="image/png,image/jpeg,image/webp"></div>
       <div id="provider-fields" hidden>
         <div class="field"><label for="profession">Profesión</label><select id="profession" name="profession">${PROFESSIONS.map(p=>`<option value="${p}">${professionLabel(p)}</option>`).join("")}</select></div>
