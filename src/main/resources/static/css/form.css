@@ -21,14 +21,15 @@ select {
   background: #fff;
   border: 3px solid #954090;
   border-radius: 30px;
-  padding: .6rem .8rem;
-  color: #6f2e6b;
+  min-height: 44px;
+  padding: .65rem .9rem;
+  color: #4f1f4c;
 }
 
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 3px solid rgba(198, 63, 129, .2);
+  outline: 3px solid rgba(64, 80, 225, .28);
   outline-offset: 2px;
 }
 

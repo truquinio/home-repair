@@ -144,6 +144,12 @@ Después abre `http://localhost:8080`.
 
 Los datos se guardan en `localStorage` y pueden restaurarse desde el panel de Administración.
 
+## UX/UI y accesibilidad
+
+La interfaz se mantiene con un sistema visual común para la demo y el frontend Java, con foco en claridad, navegación por teclado, targets cómodos, contraste, formularios comprensibles y responsive. El objetivo de accesibilidad es **WCAG 2.2 AA**.
+
+Las reglas del proyecto están documentadas en [`docs/UX_UI_ACCESSIBILITY.md`](docs/UX_UI_ACCESSIBILITY.md).
+
 ## CI/CD
 
 GitHub Actions ejecuta los tests Maven y valida el artefacto estático. En `main`, el mismo workflow prepara y despliega la demo mediante GitHub Pages.

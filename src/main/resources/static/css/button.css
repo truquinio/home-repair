@@ -5,8 +5,10 @@
   border: #f1c057;
   color: #333;
 
-  width: 200px;
-  height: 40px;
+  min-width: 12rem;
+  min-height: 44px;
+  height: auto;
+  padding: .65rem 1.1rem;
 
   border-radius: 50px;
   border: none;
@@ -22,22 +24,24 @@
 .btn-warning:hover,
 .button:hover,
 .boton-github:hover {
-  transform: scale(1.1);
-  transition: 1s;
+  transform: translateY(-2px);
+  transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
 }
 
 .btn:active,
 .btn-warning:active,
 .button:active {
   background-color: #f36500;
-  transform: scale(1.1);
-  transition: 1s;
+  transform: translateY(-2px);
+  transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
 }
 
-.btn:focus,
-.btn-warning:focus,
-.button:focus {
-  outline: none;
+.btn:focus-visible,
+.btn-warning:focus-visible,
+.button:focus-visible,
+.boton-github:focus-visible {
+  outline: 3px solid rgba(64, 80, 225, .35);
+  outline-offset: 3px;
 }
 
 .btn-form {

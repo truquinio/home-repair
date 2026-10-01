@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="es-ES" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="th_templates/head :: head"></head>
 <body>
   <header th:replace="th_templates/navbar :: navbar"></header>
 
-  <main class="main-index">
+  <main id="main-content" class="main-index">
     <article class="card text-center big-card-profile" th:object="${user}">
       <div class="card-body">
         <img class="image-profile" th:src="@{'/image/DB/' + *{image}}" alt="Foto de perfil del profesional">
@@ -20,7 +20,7 @@
         <div sec:authorize="hasRole('ROLE_CUSTOMER')">
           <a class="btn btn-warning button btn-form"
              th:href="@{/work/create(applicationType='work', idProvider=${user.id})}">
-            🔨 Solicitar servicio
+            Solicitar servicio
           </a>
         </div>
 
@@ -29,7 +29,7 @@
                 id="toggle-reviews"
                 type="button"
                 class="btn btn-warning button btn-form">
-          Comentarios 📝
+          Comentarios
         </button>
       </div>
     </article>
@@ -44,13 +44,13 @@
             <span th:text="${review.customer.name + ' ' + review.customer.lastname}"></span>
           </h3>
           <p th:text="${review.review}"></p>
-          <p aria-label="Puntuación">
-            <span th:each="star : ${#numbers.sequence(1, review.ratingWork)}">⭐</span>
+          <p th:attr="aria-label=${'Puntuación: ' + review.ratingWork + ' de 5'}">
+            <span aria-hidden="true" th:each="star : ${#numbers.sequence(1, review.ratingWork)}">★</span>
           </p>
 
           <form sec:authorize="hasRole('ROLE_ADMIN')" th:action="@{/work/deleteComment}" method="post">
             <input type="hidden" name="idWork" th:value="${review.id}">
-            <button type="submit" class="btn btn-warning button btn-form">Eliminar comentario 🚫</button>
+            <button type="submit" class="btn btn-warning button btn-form">Eliminar comentario</button>
           </form>
         </div>
       </article>

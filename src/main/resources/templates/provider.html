@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html lang="es-ES" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="th_templates/head :: head"></head>
 <body>
   <header th:replace="th_templates/navbar :: navbar"></header>
 
-  <main class="main-providers">
+  <main id="main-content" class="main-providers">
     <div class="container text-center">
       <img class="image4" src="/img/provider.svg" alt="">
       <h1 class="big-title2">Profesionales para tu hogar</h1>
-      <p class="subtittle">Filtrá por especialidad o buscá por nombre y email.</p>
+      <p class="subtittle">Filtra por especialidad o busca por nombre y correo electrónico.</p>
     </div>
 
     <form class="container" method="get" th:action="@{/search}">
@@ -30,7 +30,7 @@
           <input type="search"
                  name="st"
                  id="st"
-                 placeholder="Nombre, apellido o email">
+                 placeholder="Nombre, apellido o correo electrónico">
         </div>
 
         <div class="col-12 col-md-auto">

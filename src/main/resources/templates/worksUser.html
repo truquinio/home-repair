@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="es-ES" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="th_templates/head :: head"></head>
 <body>
   <header th:replace="th_templates/navbar :: navbar"></header>
 
-  <main class="main-index">
+  <main id="main-content" class="main-index">
     <div class="container text-center">
       <div class="row">
         <div class="col left-col">
@@ -31,12 +31,12 @@
             <form th:action="@{/work/status}" method="post" class="d-inline">
               <input type="hidden" name="idWork" th:value="${work.id}">
               <input type="hidden" name="wStat" value="ACCEPTED">
-              <button type="submit" class="btn btn-warning">Aceptar trabajo ✅</button>
+              <button type="submit" class="btn btn-warning">Aceptar trabajo</button>
             </form>
             <form th:action="@{/work/status}" method="post" class="d-inline">
               <input type="hidden" name="idWork" th:value="${work.id}">
               <input type="hidden" name="wStat" value="REVERT">
-              <button type="submit" class="btn btn-warning">Rechazar solicitud ❌</button>
+              <button type="submit" class="btn btn-warning">Rechazar solicitud</button>
             </form>
           </div>
 
@@ -44,18 +44,18 @@
             <form th:action="@{/work/status}" method="post" class="d-inline">
               <input type="hidden" name="idWork" th:value="${work.id}">
               <input type="hidden" name="wStat" value="DONE">
-              <button type="submit" class="btn btn-warning">Finalizar trabajo ✅</button>
+              <button type="submit" class="btn btn-warning">Finalizar trabajo</button>
             </form>
             <form th:action="@{/work/status}" method="post" class="d-inline">
               <input type="hidden" name="idWork" th:value="${work.id}">
               <input type="hidden" name="wStat" value="REVERT">
-              <button type="submit" class="btn btn-warning">Cancelar trabajo ❌</button>
+              <button type="submit" class="btn btn-warning">Cancelar trabajo</button>
             </form>
           </div>
 
-          <p th:if="${work.workStatus.name() == 'DONE'}">✅ Trabajo terminado. Aún no fue valorado.</p>
-          <p th:if="${work.workStatus.name() == 'REVIEWD'}">✅ Trabajo terminado y valorado.</p>
-          <p th:if="${work.workStatus.name() == 'REVERT'}">🚫 Trabajo cancelado.</p>
+          <p th:if="${work.workStatus.name() == 'DONE'}">Trabajo terminado. Aún no ha sido valorado.</p>
+          <p th:if="${work.workStatus.name() == 'REVIEWD'}">Trabajo terminado y valorado.</p>
+          <p th:if="${work.workStatus.name() == 'REVERT'}">Trabajo cancelado.</p>
         </div>
       </article>
     </section>
@@ -73,33 +73,33 @@
           <form th:if="${work.workStatus.name() == 'REQUIRED'}" th:action="@{/work/status}" method="post">
             <input type="hidden" name="idWork" th:value="${work.id}">
             <input type="hidden" name="wStat" value="REVERT">
-            <button type="submit" class="btn btn-warning">Cancelar solicitud ❌</button>
+            <button type="submit" class="btn btn-warning">Cancelar solicitud</button>
           </form>
 
           <div th:if="${work.workStatus.name() == 'ACCEPTED'}">
-            <p>⏳ Trabajo en curso</p>
+            <p>Trabajo en curso</p>
             <form th:action="@{/work/status}" method="post" class="d-inline">
               <input type="hidden" name="idWork" th:value="${work.id}">
               <input type="hidden" name="wStat" value="DONE">
-              <button type="submit" class="btn btn-warning">Finalizar trabajo ✅</button>
+              <button type="submit" class="btn btn-warning">Finalizar trabajo</button>
             </form>
             <form th:action="@{/work/status}" method="post" class="d-inline">
               <input type="hidden" name="idWork" th:value="${work.id}">
               <input type="hidden" name="wStat" value="REVERT">
-              <button type="submit" class="btn btn-warning">Cancelar trabajo ❌</button>
+              <button type="submit" class="btn btn-warning">Cancelar trabajo</button>
             </form>
           </div>
 
           <a th:if="${work.workStatus.name() == 'DONE'}"
              th:href="@{/work/create(applicationType='review', idWork=${work.id})}"
-             class="btn btn-warning">Dejar valoración ⭐</a>
+             class="btn btn-warning">Dejar valoración</a>
 
           <div th:if="${work.workStatus.name() == 'REVIEWD'}">
-            <p>✅ Trabajo terminado y valorado.</p>
+            <p>Trabajo terminado y valorado.</p>
             <p th:text="${work.review}"></p>
           </div>
 
-          <p th:if="${work.workStatus.name() == 'REVERT'}">🚫 Trabajo cancelado.</p>
+          <p th:if="${work.workStatus.name() == 'REVERT'}">Trabajo cancelado.</p>
         </div>
       </article>
     </section>
