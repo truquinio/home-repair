@@ -85,6 +85,9 @@ public class UserService implements UserDetailsService {
 
         Roles targetRole = original.getRole();
         if (changeRole && original.getRole() == Roles.CUSTOMER) {
+            if (changes.getProfession() == null) {
+                throw new MiException("Elegí una profesión antes de convertir la cuenta en proveedor");
+            }
             targetRole = Roles.PROVIDER;
         } else if (changeRole && original.getRole() == Roles.PROVIDER) {
             targetRole = Roles.CUSTOMER;
