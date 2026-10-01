@@ -10,6 +10,7 @@ import com.egg.MiMaridoTeLoHace.Repositories.WorkRepository;
 import com.egg.MiMaridoTeLoHace.Services.ImageService;
 import com.egg.MiMaridoTeLoHace.Services.UserService;
 import com.egg.MiMaridoTeLoHace.converters.ImageConverter;
+import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -208,16 +209,20 @@ public class UserController {
             return null;
         }
 
-        if (current.getRole() == Roles.CUSTOMER
-                && "customer-avatar.png".equals(currentImage.getName())) {
-            return imageService.GetByName("provider-avatar.png");
-        }
+        try {
+            if (current.getRole() == Roles.CUSTOMER
+                    && "customer-avatar.png".equals(currentImage.getName())) {
+                return imageService.GetByName("provider-avatar.png");
+            }
 
-        if (current.getRole() == Roles.PROVIDER
-                && "provider-avatar.png".equals(currentImage.getName())) {
-            return imageService.GetByName("customer-avatar.png");
-        }
+            if (current.getRole() == Roles.PROVIDER
+                    && "provider-avatar.png".equals(currentImage.getName())) {
+                return imageService.GetByName("customer-avatar.png");
+            }
 
-        return null;
+            return null;
+        } catch (IOException e) {
+            throw new MiException("No se pudo cargar la imagen por defecto");
+        }
     }
 }
