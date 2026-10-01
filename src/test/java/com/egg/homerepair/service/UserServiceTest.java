@@ -105,6 +105,20 @@ class UserServiceTest {
     }
 
     @Test
+    void adminAccountCannotBeToggledInactive() {
+        User admin = validUser("admin-toggle@example.test");
+        admin.setId("admin-2");
+        admin.setRole(Roles.ADMIN);
+        admin.setAlta(true);
+
+        MiException error = assertThrows(
+                MiException.class,
+                () -> userService.toggleActiveStatus(admin));
+
+        assertEquals("Las cuentas administrativas no pueden desactivarse desde esta acción", error.getMessage());
+    }
+
+    @Test
     void createUserIgnoresClientSuppliedId() throws Exception {
         User user = validUser("lucia-id@example.test");
         user.setId("existing-user-id");
