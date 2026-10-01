@@ -102,6 +102,7 @@ img{max-width:100%;display:block}
 .section-header{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:26px}
 .section-header-centered{display:block;text-align:center}
 .section-header-centered .section-copy{margin:6px auto 0}
+.section-header-centered .section-header-action{margin-top:16px}
 .section-title{font-family:"Paytone One",sans-serif;color:var(--primary);font-size:2rem;margin:0}
 .section-copy{color:var(--muted);max-width:650px;margin:6px 0 0;line-height:1.65}
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
@@ -153,6 +154,20 @@ img{max-width:100%;display:block}
 .field textarea{min-height:118px;resize:vertical}
 .field input:focus,.field select:focus,.field textarea:focus,.filters input:focus,.filters select:focus{outline:3px solid rgba(52,72,212,.11);border-color:var(--primary)}
 .form-card{max-width:690px;margin:20px auto;padding:30px}
+.form-card-centered{text-align:center}
+.form-card-centered .page-title{margin-left:auto;margin-right:auto}
+.form-card-centered .form-intro{max-width:520px;margin:0 auto 18px}
+.form-card-centered .field label{text-align:center}
+.form-card-centered .demo-user{
+  grid-template-columns:1fr;
+  justify-items:center;
+  text-align:center;
+  padding:16px 12px;
+}
+.form-card-centered .demo-user img{width:52px;height:52px}
+.form-card-centered .demo-user>span{text-align:center}
+.form-card-centered form>.btn{display:flex;margin:4px auto 0}
+.form-card-centered form>.meta{text-align:center}
 .form-error{color:var(--danger);font-weight:600}
 .demo-users{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:22px 0}
 .demo-user{display:grid;grid-template-columns:44px minmax(0,1fr);align-items:center;gap:11px;min-width:0;padding:12px;border:1px solid var(--border);border-radius:16px;background:#fff;text-align:left}

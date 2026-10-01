@@ -135,12 +135,12 @@ function home(){
   </section>
 
   <section class="section">
-    <div class="section-header"><div><span class="eyebrow">Servicios</span><h2 class="section-title">¿Qué necesitas resolver?</h2><p class="section-copy">Filtra por especialidad y compara perfiles antes de solicitar un trabajo.</p></div></div>
+    <div class="section-header section-header-centered"><div><span class="eyebrow">Servicios</span><h2 class="section-title">¿Qué necesitas resolver?</h2><p class="section-copy">Filtra por especialidad y compara perfiles antes de solicitar un trabajo.</p></div></div>
     <div class="service-grid">${PROFESSIONS.map(p=>`<button class="service-card" data-profession="${p}"><img src="${PROFESSION_META[p].icon}" alt=""><span><strong>${PROFESSION_META[p].label}</strong><span>Ver profesionales</span></span></button>`).join("")}</div>
   </section>
 
   <section class="section">
-    <div class="section-header"><div><span class="eyebrow">Destacados</span><h2 class="section-title">Profesionales mejor valorados</h2><p class="section-copy">Perfiles con experiencia, información visible y valoraciones de clientes.</p></div><a class="btn secondary small" href="#providers">Ver todos</a></div>
+    <div class="section-header section-header-centered"><div><span class="eyebrow">Destacados</span><h2 class="section-title">Profesionales mejor valorados</h2><p class="section-copy">Perfiles con experiencia, información visible y valoraciones de clientes.</p></div><a class="btn secondary small section-header-action" href="#providers">Ver todos</a></div>
     <div class="grid">${providers.sort((a,b)=>b.rating-a.rating).slice(0,3).map(providerCard).join("")}</div>
   </section>
 
@@ -187,8 +187,8 @@ function providerCard(u){const count=reviewCount(u.id);return `<article class="c
 </article>`}
 
 function login(){
-  layout(`<div class="form-card card"><h1 class="page-title">Ingresar</h1>
-    <p>Puedes usar una cuenta demo o los datos creados en este navegador.</p>
+  layout(`<div class="form-card card form-card-centered"><h1 class="page-title">Ingresar</h1>
+    <p class="meta form-intro">Puedes usar una cuenta demo o los datos creados en este navegador.</p>
     <div class="demo-users">
       <button class="demo-user" data-demo="u-customer"><img src="./img/customer-avatar-blue.png" alt=""><span><strong>Cliente</strong><span>cliente@homerepair.demo</span></span></button>
       <button class="demo-user" data-demo="u-p1"><img src="./img/provider-avatar-lightblue.png" alt=""><span><strong>Profesional</strong><span>fontanero@homerepair.demo</span></span></button>
