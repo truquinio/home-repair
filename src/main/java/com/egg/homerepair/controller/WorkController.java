@@ -53,7 +53,7 @@ public class WorkController {
         if ("review".equals(applicationType)) {
             Work work = workService.getById(idWork);
             if (actor.getRole() != Roles.CUSTOMER
-                    || !actor.getId().equals(work.getUserCustomerId().getId())
+                    || !actor.getId().equals(work.getCustomer().getId())
                     || work.getWorkStatus() != WorkStatus.DONE) {
                 throw new MiException("No podés valorar este trabajo");
             }
@@ -104,8 +104,8 @@ public class WorkController {
                 .filter(user -> user.getRole() == Roles.PROVIDER && Boolean.TRUE.equals(user.getAlta()))
                 .orElseThrow(() -> new MiException("Proveedor no disponible"));
 
-        work.setUserCustomerId(actor);
-        work.setUserProviderId(provider);
+        work.setCustomer(actor);
+        work.setProvider(provider);
         workService.createWork(work);
         return "redirect:/home";
     }
@@ -115,13 +115,13 @@ public class WorkController {
         User user = requireSessionUser(session);
 
         if (user.getRole() == Roles.PROVIDER) {
-            List<Work> works = workRepository.getWorkByUserProvider(user);
+            List<Work> works = workRepository.findByProvider(user);
             model.addAttribute("providerWorkList", works);
             return "worksUser";
         }
 
         if (user.getRole() == Roles.CUSTOMER) {
-            List<Work> works = workRepository.getWorkByUserCustomer(user);
+            List<Work> works = workRepository.findByCustomer(user);
             model.addAttribute("customerWorkList", works);
             return "worksUser";
         }
@@ -154,8 +154,8 @@ public class WorkController {
         Work persisted = workService.getById(idWork);
 
         if (actor.getRole() != Roles.CUSTOMER
-                || persisted.getUserCustomerId() == null
-                || !actor.getId().equals(persisted.getUserCustomerId().getId())
+                || persisted.getCustomer() == null
+                || !actor.getId().equals(persisted.getCustomer().getId())
                 || persisted.getWorkStatus() != WorkStatus.DONE) {
             throw new MiException("No podés valorar este trabajo");
         }
@@ -177,7 +177,7 @@ public class WorkController {
         persisted.setRatingWork(rating);
         persisted.setWorkStatus(WorkStatus.REVIEWD);
         workRepository.save(persisted);
-        userService.updateRating(persisted.getUserProviderId());
+        userService.updateRating(persisted.getProvider());
     }
 
     private User requireSessionUser(HttpSession session) throws MiException {

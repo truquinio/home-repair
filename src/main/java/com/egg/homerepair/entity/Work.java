@@ -35,11 +35,11 @@ public class Work {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "customer_id", nullable = false)
-    private User userCustomerId;
+    private User customer;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "provider_id", nullable = false)
-    private User userProviderId;
+    private User provider;
 
     @Column(length = 500)
     private String review;

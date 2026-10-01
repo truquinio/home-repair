@@ -21,8 +21,8 @@
       <article class="card text-center large-card" th:each="work : ${providerWorkList}">
         <div class="card-body">
           <h3 class="card-title">
-            <img th:src="@{'/image/DB/' + ${work.userCustomerId.image}}" alt="" class="imagen-customer">
-            <span th:text="${work.userCustomerId.name + ' ' + work.userCustomerId.lastname}"></span>
+            <img th:src="@{'/image/DB/' + ${work.customer.image}}" alt="" class="imagen-customer">
+            <span th:text="${work.customer.name + ' ' + work.customer.lastname}"></span>
           </h3>
           <p class="card-text" th:text="${work.workName}"></p>
           <p th:text="${'Problema: ' + work.workDescription}"></p>
@@ -64,8 +64,8 @@
       <article class="card text-center large-card" th:each="work : ${customerWorkList}">
         <div class="card-body">
           <h3 class="card-title">
-            <img th:src="@{'/image/DB/' + ${work.userProviderId.image}}" alt="" class="imagen-customer">
-            <span th:text="${work.userProviderId.name + ' ' + work.userProviderId.lastname}"></span>
+            <img th:src="@{'/image/DB/' + ${work.provider.image}}" alt="" class="imagen-customer">
+            <span th:text="${work.provider.name + ' ' + work.provider.lastname}"></span>
           </h3>
           <p class="card-text" th:text="${work.workName}"></p>
           <p th:text="${work.workDescription}"></p>

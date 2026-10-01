@@ -209,7 +209,7 @@ public class UserService implements UserDetailsService {
             return;
         }
 
-        double average = workRepository.getWorkByUserProvider(provider).stream()
+        double average = workRepository.findByProvider(provider).stream()
                 .filter(work -> work.getWorkStatus() == WorkStatus.REVIEWD)
                 .mapToInt(Work::getRatingWork)
                 .average()

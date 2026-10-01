@@ -2,16 +2,12 @@ package com.egg.homerepair.repository;
 
 import com.egg.homerepair.entity.User;
 import com.egg.homerepair.entity.Work;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface WorkRepository extends JpaRepository<Work, String> {
 
-    @Query("SELECT w FROM Work w WHERE w.userProviderId = :provider_id")
-    List<Work> getWorkByUserProvider(@Param("provider_id") User provider);
+    List<Work> findByProvider(User provider);
 
-    @Query("SELECT w FROM Work w WHERE w.userCustomerId = :customer_id")
-    List<Work> getWorkByUserCustomer(@Param("customer_id") User customer);
+    List<Work> findByCustomer(User customer);
 }

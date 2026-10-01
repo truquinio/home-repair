@@ -184,7 +184,7 @@ public class UserController {
     }
 
     private void addReviews(Model model, User user) {
-        List<Work> reviews = workRepository.getWorkByUserProvider(user);
+        List<Work> reviews = workRepository.findByProvider(user);
         model.addAttribute("check", reviews.isEmpty() ? "false" : "");
         model.addAttribute("listReviews", reviews);
     }

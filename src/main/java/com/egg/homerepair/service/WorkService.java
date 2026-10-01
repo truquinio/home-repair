@@ -20,11 +20,11 @@ public class WorkService {
 
     @Transactional
     public void createWork(Work work) throws MiException {
-        if (work == null || work.getUserCustomerId() == null || work.getUserProviderId() == null) {
+        if (work == null || work.getCustomer() == null || work.getProvider() == null) {
             throw new MiException("La solicitud de trabajo no es válida");
         }
-        if (work.getUserCustomerId().getRole() != Roles.CUSTOMER
-                || work.getUserProviderId().getRole() != Roles.PROVIDER) {
+        if (work.getCustomer().getRole() != Roles.CUSTOMER
+                || work.getProvider().getRole() != Roles.PROVIDER) {
             throw new MiException("Los participantes del trabajo no son válidos");
         }
 
@@ -47,11 +47,6 @@ public class WorkService {
         work.setRatingWork(0);
         work.setWorkStatus(WorkStatus.REQUIRED);
         workRepository.save(work);
-    }
-
-    @Transactional
-    public void delete(String id) throws MiException {
-        workRepository.delete(findById(id));
     }
 
     public Work getById(String id) throws MiException {
@@ -118,13 +113,13 @@ public class WorkService {
         }
 
         if (actor.getRole() == Roles.CUSTOMER) {
-            return work.getUserCustomerId() != null
-                    && actor.getId().equals(work.getUserCustomerId().getId());
+            return work.getCustomer() != null
+                    && actor.getId().equals(work.getCustomer().getId());
         }
 
         if (actor.getRole() == Roles.PROVIDER) {
-            return work.getUserProviderId() != null
-                    && actor.getId().equals(work.getUserProviderId().getId());
+            return work.getProvider() != null
+                    && actor.getId().equals(work.getProvider().getId());
         }
 
         return false;

@@ -39,22 +39,22 @@ class WorkServiceTest {
 
         work = new Work();
         work.setId("work-1");
-        work.setUserCustomerId(customer);
-        work.setUserProviderId(provider);
+        work.setCustomer(customer);
+        work.setProvider(provider);
         work.setWorkStatus(WorkStatus.REQUIRED);
     }
 
     @Test
     void createWorkRejectsBlankOrOversizedContent() {
         Work blank = new Work();
-        blank.setUserCustomerId(customer);
-        blank.setUserProviderId(provider);
+        blank.setCustomer(customer);
+        blank.setProvider(provider);
         blank.setWorkName(" ");
         blank.setWorkDescription("Valid description");
 
         Work tooLong = new Work();
-        tooLong.setUserCustomerId(customer);
-        tooLong.setUserProviderId(provider);
+        tooLong.setCustomer(customer);
+        tooLong.setProvider(provider);
         tooLong.setWorkName("x".repeat(101));
         tooLong.setWorkDescription("Valid description");
 
@@ -79,8 +79,8 @@ class WorkServiceTest {
     void createWorkIgnoresClientSuppliedId() throws MiException {
         Work submitted = new Work();
         submitted.setId("existing-work-id");
-        submitted.setUserCustomerId(customer);
-        submitted.setUserProviderId(provider);
+        submitted.setCustomer(customer);
+        submitted.setProvider(provider);
         submitted.setWorkName("Repair leak");
         submitted.setWorkDescription("Water is leaking under the sink.");
         submitted.setReview("Injected review");

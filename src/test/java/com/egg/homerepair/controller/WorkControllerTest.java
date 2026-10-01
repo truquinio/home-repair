@@ -51,8 +51,8 @@ class WorkControllerTest {
 
         persisted = new Work();
         persisted.setId("work-1");
-        persisted.setUserCustomerId(customer);
-        persisted.setUserProviderId(provider);
+        persisted.setCustomer(customer);
+        persisted.setProvider(provider);
         persisted.setWorkStatus(WorkStatus.DONE);
 
         session = new MockHttpSession();
