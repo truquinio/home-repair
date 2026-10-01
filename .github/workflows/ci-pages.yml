@@ -40,20 +40,22 @@ jobs:
       JPA_DDL_AUTO: create-drop
       JPA_SHOW_SQL: "false"
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: "17"
           cache: maven
       - name: Run Maven tests
-        run: ./mvnw --batch-mode test
+        run: |
+          chmod +x mvnw
+          ./mvnw --batch-mode test
 
   demo:
     name: Validate static demo
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Build static artifact
         shell: bash
         run: |
@@ -68,7 +70,7 @@ jobs:
           ! grep -R "provider-avatar-blue.png" public/app.js
       - name: Upload Pages artifact
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: public
 
@@ -82,7 +84,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Configure Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Deploy
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
