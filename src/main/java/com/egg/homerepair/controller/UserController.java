@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -138,11 +139,12 @@ public class UserController {
         }
 
         Image image = file.isEmpty() ? defaultImageForRoleChange(actor) : imageConverter.convert(file);
-        User updated = userService.modifyUser(id, changes, image, true);
-        session.setAttribute("userSession", updated);
+        userService.modifyUser(id, changes, image, true);
 
-        // The granted authorities must be recreated after a role change.
-        return "redirect:/logout";
+        // The current Authentication still contains the previous role.
+        // End the session explicitly so the next login rebuilds the authorities.
+        endSession(session);
+        return "redirect:/login";
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -171,7 +173,8 @@ public class UserController {
         userService.deactivateUser(id);
 
         if (ownAccount) {
-            return "redirect:/logout";
+            endSession(session);
+            return "redirect:/login";
         }
         return "redirect:/admin/dashboard";
     }
@@ -200,6 +203,11 @@ public class UserController {
             throw new MiException("Debés iniciar sesión");
         }
         return userService.getById(user.getId());
+    }
+
+    private void endSession(HttpSession session) {
+        SecurityContextHolder.clearContext();
+        session.invalidate();
     }
 
     private Image defaultImageForRoleChange(User current) throws MiException {
