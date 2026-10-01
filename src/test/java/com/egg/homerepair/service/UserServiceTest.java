@@ -89,6 +89,25 @@ class UserServiceTest {
     }
 
     @Test
+    void profileRoleChangeCannotCreateProviderWithoutProfession() {
+        User customer = validUser("profile-customer@example.test");
+        customer.setId("customer-2");
+        customer.setRole(Roles.CUSTOMER);
+
+        User changes = validUser("profile-customer@example.test");
+        changes.setProfession(null);
+
+        when(userRepository.findById("customer-2"))
+                .thenReturn(java.util.Optional.of(customer));
+
+        MiException error = assertThrows(
+                MiException.class,
+                () -> userService.modifyUser("customer-2", changes, null, true));
+
+        assertEquals("Elegí una profesión antes de convertir la cuenta en proveedor", error.getMessage());
+    }
+
+    @Test
     void adminAccountCannotBeDeactivated() {
         User admin = validUser("admin@example.test");
         admin.setId("admin-1");
