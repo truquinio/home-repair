@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import com.egg.homerepair.entity.Image;
 import com.egg.homerepair.entity.User;
+import com.egg.homerepair.enums.Professions;
 import com.egg.homerepair.enums.Roles;
 import com.egg.homerepair.exception.MiException;
 import com.egg.homerepair.repository.UserRepository;
@@ -135,6 +136,66 @@ class UserServiceTest {
                 () -> userService.toggleActiveStatus(admin));
 
         assertEquals("Las cuentas administrativas no pueden desactivarse desde esta acción", error.getMessage());
+    }
+
+    @Test
+    void modifyUserRejectsBlankName() {
+        User existing = validUser("edit@example.test");
+        existing.setId("user-edit");
+        existing.setRole(Roles.CUSTOMER);
+
+        User changes = validUser("edit@example.test");
+        changes.setName(" ");
+
+        when(userRepository.findById("user-edit"))
+                .thenReturn(java.util.Optional.of(existing));
+
+        MiException error = assertThrows(
+                MiException.class,
+                () -> userService.modifyUser("user-edit", changes, null, false));
+
+        assertEquals("El nombre es obligatorio", error.getMessage());
+    }
+
+    @Test
+    void modifyUserRejectsShortNewPassword() {
+        User existing = validUser("password@example.test");
+        existing.setId("user-password");
+        existing.setRole(Roles.CUSTOMER);
+
+        User changes = validUser("password@example.test");
+        changes.setPassword("123");
+
+        when(userRepository.findById("user-password"))
+                .thenReturn(java.util.Optional.of(existing));
+
+        MiException error = assertThrows(
+                MiException.class,
+                () -> userService.modifyUser("user-password", changes, null, false));
+
+        assertEquals("La contraseña debe tener al menos 6 caracteres", error.getMessage());
+    }
+
+    @Test
+    void providerEditRequiresProfessionAndFieldLimits() {
+        User existing = validUser("provider@example.test");
+        existing.setId("provider-edit");
+        existing.setRole(Roles.PROVIDER);
+        existing.setProfession(Professions.PLOMERO);
+
+        User changes = validUser("provider@example.test");
+        changes.setProfession(null);
+        changes.setDescription("x".repeat(501));
+        changes.setPhone("1".repeat(31));
+
+        when(userRepository.findById("provider-edit"))
+                .thenReturn(java.util.Optional.of(existing));
+
+        MiException error = assertThrows(
+                MiException.class,
+                () -> userService.modifyUser("provider-edit", changes, null, false));
+
+        assertEquals("La profesión es obligatoria para proveedores", error.getMessage());
     }
 
     @Test
