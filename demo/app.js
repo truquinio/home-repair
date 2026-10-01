@@ -187,8 +187,8 @@ function providerCard(u){const count=reviewCount(u.id);return `<article class="c
 </article>`}
 
 function login(){
-  layout(`<div class="form-card card"><h1 class="page-title">Ingresar</h1>
-    <p>Puedes usar una cuenta demo o los datos creados en este navegador.</p>
+  layout(`<div class="form-card card form-card-centered"><h1 class="page-title">Ingresar</h1>
+    <p class="meta form-intro">Puedes usar una cuenta demo o los datos creados en este navegador.</p>
     <div class="demo-users">
       <button class="demo-user" data-demo="u-customer"><img src="./img/customer-avatar-blue.png" alt=""><span><strong>Cliente</strong><span>cliente@homerepair.demo</span></span></button>
       <button class="demo-user" data-demo="u-p1"><img src="./img/provider-avatar-lightblue.png" alt=""><span><strong>Profesional</strong><span>fontanero@homerepair.demo</span></span></button>
