@@ -207,7 +207,7 @@ img{max-width:100%;display:block}
 .table-wrap{overflow:auto;background:#fff;border-radius:20px;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
 table{width:100%;border-collapse:collapse;min-width:820px}
 th,td{text-align:left;padding:13px 15px;border-bottom:1px solid #eef0f3;vertical-align:middle}
-th{color:#475467;background:#f8f9fc;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+th{color:#475467;background:#f8f9fc;font-size:.78rem;letter-spacing:.04em}
 .table-user{display:flex;align-items:center;gap:10px}
 .table-user img{width:38px;height:38px;border-radius:50%;object-fit:cover}
 .empty{text-align:center;padding:50px 20px;color:var(--muted)}
