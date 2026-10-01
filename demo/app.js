@@ -326,7 +326,7 @@ function admin(){
   const users=state.users.filter(u=>u.id!==currentUser().id);
   layout(`<div class="section-header"><div><span class="eyebrow">Administración</span><h1 class="page-title">Usuarios de la demo</h1><p class="section-copy">Activá, desactivá o cambiá el tipo de cuenta para probar permisos y vistas.</p></div></div>
   <div class="table-wrap"><table><thead><tr><th>Usuario</th><th>Rol</th><th>Profesión</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>
-  ${users.map(u=>`<tr><td><div class="table-user"><img src="${escapeHtml(u.image)}" alt=""><span><strong>${escapeHtml(u.name)} ${escapeHtml(u.lastname)}</strong><br><small>${escapeHtml(u.email)}</small></span></div></td><td>${u.role}</td><td>${u.profession?professionLabel(u.profession):"—"}</td><td><span class="badge ${u.active?"success":"off"}">${u.active?"Activo":"Inactivo"}</span></td><td><button class="btn small secondary" data-toggle-user="${u.id}">${u.active?"Desactivar":"Activar"}</button> ${u.role!=="ADMIN"?`<button class="btn small secondary" data-toggle-role="${u.id}">Cambiar rol</button>`:""}</td></tr>`).join("")}
+  ${users.map(u=>`<tr><td><div class="table-user"><img src="${escapeHtml(u.image)}" alt=""><span><strong>${escapeHtml(u.name)} ${escapeHtml(u.lastname)}</strong><br><small>${escapeHtml(u.email)}</small></span></div></td><td>${u.role}</td><td>${u.profession?professionLabel(u.profession):"—"}</td><td><span class="badge ${u.active?"success":"off"}">${u.active?"Activo":"Inactivo"}</span></td><td><button class="btn small secondary" data-toggle-user="${u.id}">${u.active?"Desactivar":"Activar"}</button> ${u.role==="PROVIDER"?`<button class="btn small secondary" data-toggle-role="${u.id}">Pasar a cliente</button>`:""}</td></tr>`).join("")}
   </tbody></table></div>
   <div class="actions"><button class="btn danger" data-action="reset">Restaurar datos demo</button></div>`);
 }
@@ -363,11 +363,17 @@ document.addEventListener("click",event=>{
   if(el.dataset.toggleUser){const u=userById(el.dataset.toggleUser);if(u){u.active=!u.active;if(state.currentUserId===u.id)state.currentUserId=null;persist();admin()}}
   if(el.dataset.toggleRole){
     const u=userById(el.dataset.toggleRole);
-    if(u){
-      u.role=u.role==="CUSTOMER"?"PROVIDER":"CUSTOMER";
-      if(u.role==="PROVIDER"){u.profession=u.profession||"PLOMERO";u.description=u.description||"Profesional de Home Repair."}
-      else{u.profession=null;u.description="";u.phone=""}
-      persist();admin()
+    if(u?.role==="PROVIDER"){
+      u.role="CUSTOMER";
+      u.profession=null;
+      u.description="";
+      u.phone="";
+      u.rating=0;
+      if(String(u.image).startsWith("./img/provider-avatar")){
+        u.image="./img/customer-avatar.png";
+      }
+      persist();
+      admin();
     }
   }
 });
