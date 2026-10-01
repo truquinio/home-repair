@@ -33,7 +33,7 @@
     </div>
 
     <div id="form-container" class="form-display" hidden>
-      <form id="register-form" method="post" th:object="${user}" th:action="@{/user/register}">
+      <form id="register-form" method="post" th:object="${user}" th:action="@{/user/register}" enctype="multipart/form-data">
         <div class="field">
           <label class="label" for="name">Nombre</label>
           <input type="text" id="name" th:field="*{name}" maxlength="60" required>
@@ -52,6 +52,14 @@
         <div id="phone-group" class="field">
           <label class="label" for="phone">Teléfono</label>
           <input type="tel" id="phone" th:field="*{phone}" maxlength="30">
+        </div>
+
+        <div class="field">
+          <label class="label" for="register-image">Foto de perfil <span class="meta">(opcional)</span></label>
+          <input type="file"
+                 id="register-image"
+                 name="img"
+                 accept=".png,.jpeg,.jpg,.webp,image/png,image/jpeg,image/webp">
         </div>
 
         <div class="field">
