@@ -56,7 +56,7 @@ public class ImageService {
         if (!resource.exists()) {
             throw new IOException("No se encontró la imagen " + name);
         }
-        return imageConverter.ResourcetoImage(resource);
+        return imageConverter.resourceToImage(resource);
     }
 
     @Transactional
