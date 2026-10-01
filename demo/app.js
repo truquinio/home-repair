@@ -195,8 +195,8 @@ function login(){
       <button class="demo-user" data-demo="u-admin"><img src="./img/profileImg.png" alt=""><span><strong>Administrador</strong><span>admin@homerepair.demo</span></span></button>
     </div>
     <form id="login-form">
-      <div class="field"><label for="email">Correo electrónico</label><input id="email" name="email" type="email" autocomplete="email" required></div>
-      <div class="field"><label for="password">Contraseña</label><input id="password" name="password" type="password" autocomplete="current-password" required></div>
+      <div class="field"><label class="sr-only" for="email">Correo electrónico</label><input id="email" name="email" type="email" autocomplete="email" placeholder="Correo electrónico" required></div>
+      <div class="field"><label class="sr-only" for="password">Contraseña</label><input id="password" name="password" type="password" autocomplete="current-password" placeholder="Contraseña" required></div>
       <p id="login-error" class="form-error" role="alert"></p>
       <button class="btn" type="submit">Ingresar</button>
     </form>
