@@ -44,6 +44,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                     .antMatchers(
                             "/",
                             "/about",
+                            "/error",
                             "/login",
                             "/logincheck",
                             "/user/register",
