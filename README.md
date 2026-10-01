@@ -1,4 +1,4 @@
-# Home Repair
+﻿# Home Repair
 
 Plataforma web para conectar personas que necesitan reparaciones del hogar con profesionales de distintos rubros.
 
@@ -6,17 +6,17 @@ Plataforma web para conectar personas que necesitan reparaciones del hogar con p
 
 ## Live Demo
 
-La demo funcional está publicada en:
+La demo funcional estÃ¡ publicada en:
 
 **https://truquinio.github.io/home-repair/**
 
-Permite probar los principales flujos del producto directamente en el navegador: registro, login demo, roles Customer/Provider/Admin, búsqueda de profesionales, perfiles, solicitudes de trabajo, cambios de estado, reviews, ratings y administración simulada.
+Permite probar los principales flujos del producto directamente en el navegador: registro, login demo, roles Customer/Provider/Admin, bÃºsqueda de profesionales, perfiles, solicitudes de trabajo, cambios de estado, reviews, ratings y administraciÃ³n simulada.
 
-> La demo utiliza almacenamiento local del navegador. La autenticación, autorización y persistencia de esta versión son simuladas y no sustituyen la seguridad ni la base de datos del backend Java original.
+> La demo utiliza almacenamiento local del navegador. La autenticaciÃ³n, autorizaciÃ³n y persistencia de esta versiÃ³n son simuladas y no sustituyen la seguridad ni la base de datos del backend Java original.
 
 ## Proyecto original
 
-La aplicación original es un proyecto full stack desarrollado con:
+La aplicaciÃ³n original es un proyecto full stack desarrollado con:
 
 - Java 17
 - Spring Boot 2.7
@@ -31,31 +31,31 @@ La aplicación original es un proyecto full stack desarrollado con:
 ### Funcionalidades
 
 - Roles Customer, Provider y Admin
-- Registro e inicio de sesión
+- Registro e inicio de sesiÃ³n
 - Perfiles de clientes y proveedores
-- Búsqueda y filtrado de profesionales por rubro
+- BÃºsqueda y filtrado de profesionales por rubro
 - Solicitudes de trabajo
-- Aceptación, cancelación y finalización de trabajos
+- AceptaciÃ³n, cancelaciÃ³n y finalizaciÃ³n de trabajos
 - Reviews y ratings
-- Gestión administrativa de usuarios
-- Carga y visualización de imágenes
+- GestiÃ³n administrativa de usuarios
+- Carga y visualizaciÃ³n de imÃ¡genes
 
 ## Estructura
 
 ```text
 .
-├── src/                         # Aplicación Java/Spring Boot original
-│   ├── main/java/               # Backend
-│   ├── main/resources/
-│   │   ├── static/              # CSS, JS e imágenes
-│   │   └── templates/           # Vistas Thymeleaf
-│   └── test/                    # Tests
-├── demo/                        # Demo estática para GitHub Pages
-│   ├── index.html
-│   ├── styles.css
-│   └── app.js
-├── .github/workflows/           # CI y despliegue
-└── pom.xml
+â”œâ”€â”€ src/                         # AplicaciÃ³n Java/Spring Boot original
+â”‚   â”œâ”€â”€ main/java/               # Backend
+â”‚   â”œâ”€â”€ main/resources/
+â”‚   â”‚   â”œâ”€â”€ static/              # CSS, JS e imÃ¡genes
+â”‚   â”‚   â””â”€â”€ templates/           # Vistas Thymeleaf
+â”‚   â””â”€â”€ test/                    # Tests
+â”œâ”€â”€ demo/                        # Demo estÃ¡tica para GitHub Pages
+â”‚   â”œâ”€â”€ index.html
+â”‚   â”œâ”€â”€ styles.css
+â”‚   â””â”€â”€ app.js
+â”œâ”€â”€ .github/workflows/           # CI y despliegue
+â””â”€â”€ pom.xml
 ```
 
 ## Ejecutar el backend Java
@@ -69,12 +69,12 @@ La aplicación original es un proyecto full stack desarrollado con:
 Configura las variables de entorno:
 
 ```bash
-DB_URL=jdbc:mysql://localhost:3306/mimaridotelohace
+DB_URL=jdbc:mysql://localhost:3306/home_repair
 DB_USERNAME=tu_usuario
 DB_PASSWORD=tu_password
 ```
 
-Después:
+DespuÃ©s:
 
 ```bash
 ./mvnw spring-boot:run
@@ -88,7 +88,7 @@ En Windows:
 
 ## Ejecutar la demo localmente
 
-La demo no requiere Node, Java ni MySQL. Puede servirse con cualquier servidor HTTP estático.
+La demo no requiere Node, Java ni MySQL. Puede servirse con cualquier servidor HTTP estÃ¡tico.
 
 Por ejemplo:
 
@@ -100,7 +100,7 @@ y abrir `http://localhost:8080`.
 
 ### Cuentas demo
 
-| Rol | Email | Contraseña |
+| Rol | Email | ContraseÃ±a |
 | --- | --- | --- |
 | Customer | `cliente@homerepair.demo` | `demo123` |
 | Provider | `plomero@homerepair.demo` | `demo123` |
@@ -110,13 +110,13 @@ Los datos se guardan en `localStorage` y pueden restaurarse desde el panel Admin
 
 ## CI/CD
 
-GitHub Actions ejecuta los tests Maven y valida el artefacto estático. En `main`, el mismo workflow prepara y despliega la demo mediante GitHub Pages.
+GitHub Actions ejecuta los tests Maven y valida el artefacto estÃ¡tico. En `main`, el mismo workflow prepara y despliega la demo mediante GitHub Pages.
 
 ## Seguridad
 
-Las credenciales de base de datos no deben versionarse. El backend utiliza configuración externa mediante variables de entorno.
+Las credenciales de base de datos no deben versionarse. El backend utiliza configuraciÃ³n externa mediante variables de entorno.
 
-Las credenciales incluidas en la sección de cuentas demo son deliberadamente públicas porque pertenecen únicamente a la simulación frontend.
+Las credenciales incluidas en la secciÃ³n de cuentas demo son deliberadamente pÃºblicas porque pertenecen Ãºnicamente a la simulaciÃ³n frontend.
 
 ## Autor
 
@@ -124,3 +124,4 @@ Las credenciales incluidas en la sección de cuentas demo son deliberadamente p�
 
 - GitHub: https://github.com/truquinio
 - LinkedIn: https://www.linkedin.com/in/federico-trucco/
+
