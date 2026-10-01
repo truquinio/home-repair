@@ -81,6 +81,9 @@ public class UserService implements UserDetailsService {
         User original = findUser(id);
 
         if (changeRole) {
+            if (original.getRole() == Roles.CUSTOMER && changes.getProfession() == null) {
+                throw new MiException("Elegí una profesión antes de convertir la cuenta en proveedor");
+            }
             toggleCustomerProvider(original);
         }
 
@@ -107,6 +110,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public void deactivateUser(String id) throws MiException {
         User user = findUser(id);
+        ensureNonAdminLifecycleChange(user);
         user.setAlta(false);
         user.setUnsubscription(new Date());
     }
@@ -121,6 +125,9 @@ public class UserService implements UserDetailsService {
             clearProviderFields(user);
             user.setRole(Roles.CUSTOMER);
         } else if (user.getRole() == Roles.CUSTOMER) {
+            if (user.getProfession() == null) {
+                throw new MiException("Elegí una profesión antes de convertir la cuenta en proveedor");
+            }
             user.setRole(Roles.PROVIDER);
             user.setRating(0);
         }
@@ -133,6 +140,7 @@ public class UserService implements UserDetailsService {
         if (user == null) {
             throw new MiException("Usuario no encontrado");
         }
+        ensureNonAdminLifecycleChange(user);
 
         user.setAlta(!Boolean.TRUE.equals(user.getAlta()));
         user.setUnsubscription(Boolean.TRUE.equals(user.getAlta()) ? null : new Date());
@@ -270,6 +278,12 @@ public class UserService implements UserDetailsService {
         } else if (user.getRole() == Roles.PROVIDER) {
             clearProviderFields(user);
             user.setRole(Roles.CUSTOMER);
+        }
+    }
+
+    private void ensureNonAdminLifecycleChange(User user) throws MiException {
+        if (user.getRole() == Roles.ADMIN) {
+            throw new MiException("Las cuentas administrativas no pueden desactivarse desde esta acción");
         }
     }
 

@@ -70,10 +70,14 @@
             <td th:text="${u.role}"></td>
             <td>
               <div class="d-flex flex-wrap gap-2">
-                <form th:action="@{'/user/perfil/' + ${u.id} + '/role'}" method="post" th:if="${u.role.name() != 'ADMIN'}">
-                  <button class="btn btn-warning" type="submit">Cambiar rol</button>
+                <form th:action="@{'/user/perfil/' + ${u.id} + '/role'}"
+                      method="post"
+                      th:if="${u.role.name() == 'PROVIDER'}">
+                  <button class="btn btn-warning" type="submit">Pasar a cliente</button>
                 </form>
-                <form th:action="@{'/user/perfil/' + ${u.id} + '/alta'}" method="post">
+                <form th:action="@{'/user/perfil/' + ${u.id} + '/alta'}"
+                      method="post"
+                      th:if="${u.role.name() != 'ADMIN'}">
                   <button class="btn btn-warning" type="submit" th:text="${u.alta ? 'Desactivar' : 'Activar'}"></button>
                 </form>
                 <a th:href="@{/user/perfil/{id}(id=${u.id})}" class="btn btn-warning">Modificar</a>

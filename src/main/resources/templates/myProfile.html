@@ -15,14 +15,14 @@
       <input type="hidden" id="current-role" th:value="*{role}">
 
       <label class="label" for="profile-name">Nombre</label>
-      <input type="text" id="profile-name" name="name" th:value="*{name}" required>
+      <input type="text" id="profile-name" name="name" th:value="*{name}" maxlength="60" required>
 
       <label class="label" for="profile-lastname">Apellido</label>
-      <input type="text" id="profile-lastname" name="lastname" th:value="*{lastname}" required>
+      <input type="text" id="profile-lastname" name="lastname" th:value="*{lastname}" maxlength="60" required>
 
       <div class="provider-only">
         <label class="label" for="profile-phone">Teléfono</label>
-        <input type="tel" id="profile-phone" name="phone" th:value="*{phone}">
+        <input type="tel" id="profile-phone" name="phone" th:value="*{phone}" maxlength="30">
 
         <label class="label" for="profile-profession">Profesión</label>
         <select id="profile-profession" class="inputs profession" th:field="*{profession}">
@@ -34,7 +34,7 @@
       </div>
 
       <label class="btn btn-warning button btn-upload-photo1" for="profile-image">📸 Subir foto de perfil</label>
-      <input type="file" id="profile-image" name="img" accept=".png,.jpeg,.jpg,image/png,image/jpeg" hidden>
+      <input type="file" id="profile-image" name="img" accept=".png,.jpeg,.jpg,.webp,image/png,image/jpeg,image/webp" hidden>
 
       <div class="row justify-content-center text-center">
         <div class="col-12 col-md-4">
@@ -43,8 +43,8 @@
         <div class="col-12 col-md-4" sec:authorize="!hasRole('ROLE_ADMIN')">
           <button id="show-role-form" class="btn btn-warning button" type="button">👤 Cambiar rol</button>
         </div>
-        <div class="col-12 col-md-4">
-          <button id="show-delete-form" class="btn btn-warning button" type="button">🗑 Eliminar cuenta</button>
+        <div class="col-12 col-md-4" sec:authorize="!hasRole('ROLE_ADMIN')">
+          <button id="show-delete-form" class="btn btn-warning button" type="button">Desactivar cuenta</button>
         </div>
       </div>
     </form>
@@ -58,14 +58,14 @@
       </p>
 
       <label class="label" for="role-name">Nombre</label>
-      <input type="text" id="role-name" name="name" th:value="*{name}" required>
+      <input type="text" id="role-name" name="name" th:value="*{name}" maxlength="60" required>
 
       <label class="label" for="role-lastname">Apellido</label>
-      <input type="text" id="role-lastname" name="lastname" th:value="*{lastname}" required>
+      <input type="text" id="role-lastname" name="lastname" th:value="*{lastname}" maxlength="60" required>
 
       <div id="role-provider-fields">
         <label class="label" for="role-phone">Teléfono</label>
-        <input type="tel" id="role-phone" name="phone" th:value="*{phone}">
+        <input type="tel" id="role-phone" name="phone" th:value="*{phone}" maxlength="30">
 
         <label class="label" for="role-profession">Profesión</label>
         <select id="role-profession" class="inputs profession" name="profession">
@@ -78,13 +78,17 @@
       </div>
 
       <label class="btn btn-warning button" for="role-image">📸 Elegir nueva foto</label>
-      <input type="file" id="role-image" name="img" accept=".png,.jpeg,.jpg,image/png,image/jpeg" hidden>
+      <input type="file" id="role-image" name="img" accept=".png,.jpeg,.jpg,.webp,image/png,image/jpeg,image/webp" hidden>
 
       <button class="btn btn-warning button" type="submit">Confirmar cambio</button>
       <button id="cancel-role-form" class="btn btn-warning button" type="button">Cancelar</button>
     </form>
 
-    <form id="delete-form" method="post" th:action="@{'/user/perfil/' + ${user.id} + '/del'}" hidden>
+    <form id="delete-form"
+          sec:authorize="!hasRole('ROLE_ADMIN')"
+          method="post"
+          th:action="@{'/user/perfil/' + ${user.id} + '/del'}"
+          hidden>
       <h2 class="big-title2">¿Querés desactivar esta cuenta?</h2>
       <p class="subtitle text-center">La cuenta quedará inactiva y no podrá iniciar sesión.</p>
       <div class="text-center">
