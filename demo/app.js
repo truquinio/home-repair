@@ -52,6 +52,7 @@ const store={
 };
 
 let state=store.load();
+let focusMainOnRender=false;
 const app=document.querySelector("#app");
 const header=document.querySelector("#site-header");
 const toastEl=document.querySelector("#toast");
@@ -76,6 +77,7 @@ const allowedWorkTransition=(actor,work,next)=>{
 };
 const go=target=>{
   const next=`#${target}`;
+  focusMainOnRender=true;
   if(location.hash===next){route();return}
   location.hash=target;
 };
@@ -95,20 +97,33 @@ async function imageFileToAvatar(file){
   return canvas.toDataURL("image/jpeg",.82);
 }
 
+const ROUTE_TITLES={home:"Inicio",providers:"Profesionales",login:"Iniciar sesión",register:"Registro",profile:"Perfil",works:"Trabajos",review:"Valoración",hire:"Solicitar servicio",admin:"Administración",about:"Acerca de"};
+
 function nav(){
   const user=currentUser();
+  const current=(location.hash||"#home").slice(1).split("/")[0];
+  const currentPage=route=>current===route?' aria-current="page"':'';
   header.innerHTML=`<nav class="nav" aria-label="Navegación principal"><div class="nav-inner">
-    <a class="brand" href="#home">Home Repair</a>
+    <a class="brand" href="#home"${currentPage("home")}>Home Repair</a>
     <div class="nav-links">
-      <a href="#providers">Profesionales</a>
-      ${user?'<a href="#works">Trabajos</a>':""}
-      ${user?.role==="ADMIN"?'<a href="#admin">Administración</a>':""}
-      <a href="#about">Acerca de</a>
-      ${user?'<a href="#profile/me">Mi perfil</a><button class="link-button" data-action="logout">Salir</button>':'<a href="#login">Ingresar</a><a href="#register">Registrarse</a>'}
+      <a href="#providers"${currentPage("providers")}>Profesionales</a>
+      ${user?`<a href="#works"${currentPage("works")}>Trabajos</a>`:""}
+      ${user?.role==="ADMIN"?`<a href="#admin"${currentPage("admin")}>Administración</a>`:""}
+      <a href="#about"${currentPage("about")}>Acerca de</a>
+      ${user?`<a href="#profile/me"${currentPage("profile")}>Mi perfil</a><button class="link-button" data-action="logout">Salir</button>`:`<a href="#login"${currentPage("login")}>Ingresar</a><a href="#register"${currentPage("register")}>Registrarse</a>`}
     </div></div></nav>`;
 }
 
-function layout(html){nav();app.innerHTML=`<div class="container">${html}</div>`;app.focus({preventScroll:true})}
+function layout(html){
+  nav();
+  app.innerHTML=`<div class="container">${html}</div>`;
+  const route=(location.hash||"#home").slice(1).split("/")[0];
+  document.title=`${ROUTE_TITLES[route]??"Home Repair"} — Home Repair`;
+  if(focusMainOnRender){
+    requestAnimationFrame(()=>app.focus({preventScroll:true}));
+    focusMainOnRender=false;
+  }
+}
 function requireUser(){if(!currentUser()){go("login");return false}return true}
 function requireRole(role){const user=currentUser();if(!user||user.role!==role){go("home");return false}return true}
 
@@ -180,7 +195,7 @@ function providerCard(u){const count=reviewCount(u.id);return `<article class="c
   <div class="provider-body">
     <span class="badge">${professionLabel(u.profession)}</span>
     <h3>${escapeHtml(u.name)} ${escapeHtml(u.lastname)}</h3>
-    <div class="rating-line"><span class="rating" aria-label="${u.rating} de 5 estrellas">${stars(u.rating)}</span><span class="rating-number">${u.rating.toFixed?.(1)??u.rating}</span><span class="review-count">${count} ${count===1?"valoración":"valoraciones"}</span></div>
+    <div class="rating-line"><span class="rating" aria-hidden="true">${stars(u.rating)}</span><span class="rating-number">${u.rating.toFixed?.(1)??u.rating}</span><span class="review-count">${count} ${count===1?"valoración":"valoraciones"}</span></div>
     <p>${escapeHtml(u.description)}</p>
     <a class="btn small" href="#profile/${u.id}">Ver perfil</a>
   </div>
@@ -195,8 +210,8 @@ function login(){
       <button class="demo-user" data-demo="u-admin"><img src="./img/profileImg.png" alt=""><span><strong>Administrador</strong><span>admin@homerepair.demo</span></span></button>
     </div>
     <form id="login-form">
-      <div class="field"><label class="sr-only" for="email">Correo electrónico</label><input id="email" name="email" type="email" autocomplete="email" placeholder="Correo electrónico" required></div>
-      <div class="field"><label class="sr-only" for="password">Contraseña</label><input id="password" name="password" type="password" autocomplete="current-password" placeholder="Contraseña" required></div>
+      <div class="field"><label class="sr-only" for="email">Correo electrónico</label><input id="email" name="email" type="email" autocomplete="email" placeholder="Correo electrónico" aria-describedby="login-error" required></div>
+      <div class="field"><label class="sr-only" for="password">Contraseña</label><input id="password" name="password" type="password" autocomplete="current-password" placeholder="Contraseña" aria-describedby="login-error" required></div>
       <p id="login-error" class="form-error" role="alert"></p>
       <button class="btn" type="submit">Ingresar</button>
     </form>
@@ -305,7 +320,7 @@ function editProfile(){
   layout(`<div class="form-card card"><h1 class="page-title">Editar perfil</h1><form id="edit-form">
     <div class="avatar-editor">
       <img id="edit-avatar-preview" class="profile-image" src="${escapeHtml(u.image)}" alt="Foto de perfil actual">
-      <div><label class="btn secondary" for="edit-avatar">📷 Cambiar foto</label><input id="edit-avatar" type="file" accept="image/png,image/jpeg,image/webp" hidden><p class="meta">Se recorta en formato cuadrado y queda guardada en esta demo.</p></div>
+      <div><label class="btn secondary" for="edit-avatar">Cambiar foto</label><input id="edit-avatar" type="file" accept="image/png,image/jpeg,image/webp" hidden><p class="meta">Se recorta en formato cuadrado y queda guardada en esta demo.</p></div>
     </div>
     <div class="field"><label for="edit-name">Nombre</label><input id="edit-name" name="name" value="${escapeHtml(u.name)}" required></div>
     <div class="field"><label for="edit-lastname">Apellido</label><input id="edit-lastname" name="lastname" value="${escapeHtml(u.lastname)}" required></div>
@@ -333,7 +348,7 @@ function admin(){
   if(!requireRole("ADMIN"))return;
   const users=state.users.filter(u=>u.id!==currentUser().id);
   layout(`<div class="section-header"><div><span class="eyebrow">Administración</span><h1 class="page-title">Usuarios de la demo</h1><p class="section-copy">Activa, desactiva o cambia el tipo de cuenta para probar permisos y vistas.</p></div></div>
-  <div class="table-wrap"><table><thead><tr><th>Usuario</th><th>Rol</th><th>Profesión</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>
+  <div class="table-wrap"><table><caption class="sr-only">Usuarios de la demo y acciones de administración</caption><thead><tr><th scope="col">Usuario</th><th scope="col">Rol</th><th scope="col">Profesión</th><th scope="col">Estado</th><th scope="col">Acciones</th></tr></thead><tbody>
   ${users.map(u=>`<tr><td><div class="table-user"><img src="${escapeHtml(u.image)}" alt=""><span><strong>${escapeHtml(u.name)} ${escapeHtml(u.lastname)}</strong><br><small>${escapeHtml(u.email)}</small></span></div></td><td>${ROLE_LABELS[u.role]}</td><td>${u.profession?professionLabel(u.profession):"—"}</td><td><span class="badge ${u.active?"success":"off"}">${u.active?"Activo":"Inactivo"}</span></td><td><button class="btn small secondary" data-toggle-user="${u.id}">${u.active?"Desactivar":"Activar"}</button> ${u.role==="PROVIDER"?`<button class="btn small secondary" data-toggle-role="${u.id}">Pasar a cliente</button>`:""}</td></tr>`).join("")}
   </tbody></table></div>
   <div class="actions"><button class="btn danger" data-action="reset">Restaurar datos demo</button></div>`);
@@ -345,7 +360,7 @@ function about(){
     <h2>Desarrollado por Federico Trucco</h2>
     <p>Plataforma para conectar personas que necesitan reparaciones del hogar con profesionales de distintos rubros. La aplicación original fue desarrollada con Java, Spring Boot, Spring Security, JPA, Thymeleaf y MySQL.</p>
     <p>Esta versión es una demo funcional preparada para GitHub Pages: permite recorrer los principales casos de uso sin requerir un servidor Java ni una base de datos externa.</p>
-    <div class="actions"><a class="btn" href="https://github.com/truquinio/home-repair" target="_blank" rel="noopener">Ver código en GitHub</a></div>
+    <div class="actions"><a class="btn" href="https://github.com/truquinio/home-repair" target="_blank" rel="noopener noreferrer">Ver código en GitHub</a></div>
   </div></section>`);
 }
 
@@ -385,5 +400,8 @@ document.addEventListener("click",event=>{
     }
   }
 });
-window.addEventListener("hashchange",route);
+window.addEventListener("hashchange",()=>{
+  focusMainOnRender=true;
+  route();
+});
 route();

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html lang="es-ES" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="th_templates/head :: head"></head>
 <body>
   <header th:replace="th_templates/navbar :: navbar"></header>
 
-  <main class="main-index">
+  <main id="main-content" class="main-index">
     <div class="container text-center">
       <img th:if="${#strings.equals(applicationType, 'work')}"
            class="image5"
@@ -63,7 +63,7 @@
             th:action="@{/work/create(idWork=${idWork})}"
             th:object="${workReview}">
         <div class="field">
-          <label class="label" for="review">Contá cómo fue el servicio</label>
+          <label class="label" for="review">Cuenta cómo fue el servicio</label>
           <textarea id="review"
                     maxlength="500"
                     placeholder="Compartí una valoración útil para otros clientes."

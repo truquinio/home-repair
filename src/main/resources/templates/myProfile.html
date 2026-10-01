@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="es-ES" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="th_templates/head :: head"></head>
 <body>
   <header th:replace="th_templates/navbar :: navbar"></header>
 
-  <main class="main-index">
+  <main id="main-content" class="main-index">
     <div class="container text-center" th:object="${user}">
       <img class="image-profile" th:src="@{'/image/DB/' + *{image}}" alt="Foto de perfil">
       <h1 class="big-title">Mi perfil</h1>
@@ -69,7 +69,7 @@
 
         <label class="label" for="role-profession">Profesión</label>
         <select id="role-profession" class="inputs profession" name="profession">
-          <option value="">Elegí una profesión</option>
+          <option value="">Elige una profesión</option>
           <option th:each="profession : ${professions}" th:text="${profession.name}" th:value="${profession}"></option>
         </select>
 
@@ -89,7 +89,7 @@
           method="post"
           th:action="@{'/user/perfil/' + ${user.id} + '/del'}"
           hidden>
-      <h2 class="big-title2">¿Querés desactivar esta cuenta?</h2>
+      <h2 class="big-title2">¿Quieres desactivar esta cuenta?</h2>
       <p class="subtitle text-center">La cuenta quedará inactiva y no podrá iniciar sesión.</p>
       <div class="text-center">
         <button type="submit" class="btn btn-warning button">🗑 Sí, desactivar</button>

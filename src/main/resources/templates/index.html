@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- html xmlns:th="http://www.thymeleaf.org" = Para evitar que HTML arroje errores por trabajar con elementos de thymeleaf -->
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="es-ES" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="th_templates/head :: head"></head>
 
@@ -8,7 +8,7 @@
   <!-- NAVBAR >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
   <header th:replace="th_templates/navbar :: navbar"></header>
 
-  <main class="main-index">
+  <main id="main-content" class="main-index">
     <br>
 
     <!-- IMG OF THE HANDYMAN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
@@ -18,7 +18,7 @@
           <h1 class="big-title">Home Repair</h1>
           <h4 class="subtitle">Reparaciones del hogar</h4>
 
-          <a class="btn btn-warning button" href="/user/register" role="button">📝 Regístrate</a>
+          <a class="btn btn-warning button" href="/user/register" role="button">Regístrate</a>
         </div>
         <div class="col">
           <img class="image" src="/img/homeRepair.svg" alt="home repair">

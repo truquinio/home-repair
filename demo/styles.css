@@ -47,6 +47,9 @@ img{max-width:100%;display:block}
 .brand{font-family:"Paytone One",sans-serif;text-decoration:none;font-size:1.35rem;color:var(--primary);margin-right:auto;letter-spacing:.01em}
 .nav-links{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
 .nav a,.link-button{
+  display:inline-flex;
+  align-items:center;
+  min-height:44px;
   border:0;
   background:none;
   color:#344054;
@@ -55,9 +58,10 @@ img{max-width:100%;display:block}
   border-radius:999px;
   font-weight:600;
 }
-.nav a:hover,.nav a:focus-visible,.link-button:hover,.link-button:focus-visible{background:#e9edff;color:var(--primary);outline:none}
+.nav a:hover,.link-button:hover{background:#e9edff;color:var(--primary)}
+.nav a:focus-visible,.link-button:focus-visible{background:#e9edff;color:var(--primary);outline:3px solid rgba(52,72,212,.28);outline-offset:3px}
 .container{max-width:var(--max);margin:auto;padding:40px 22px 76px}
-.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--primary);font-size:.84rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--primary);font-size:.84rem;font-weight:800;letter-spacing:.03em}
 .hero{
   display:grid;
   grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);
@@ -94,7 +98,7 @@ img{max-width:100%;display:block}
 .btn.secondary{background:#fff;color:var(--text);border-color:var(--border);box-shadow:none}
 .btn.secondary:hover{background:#f9fafb}
 .btn.danger{background:#fff1f0;color:var(--danger);border-color:#fecdca;box-shadow:none}
-.btn.small{min-height:36px;padding:7px 12px;font-size:.88rem}
+.btn.small{min-height:44px;padding:7px 12px;font-size:.88rem}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:34px;max-width:680px}
 .stat{padding:16px 18px;background:rgba(255,255,255,.86);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow-sm)}
 .stat strong{display:block;font-size:1.4rem;color:var(--primary)}
@@ -146,6 +150,7 @@ img{max-width:100%;display:block}
 .field label{font-weight:700;color:#344054;font-size:.9rem}
 .field input,.field select,.field textarea,.filters input,.filters select{
   width:100%;
+  min-height:44px;
   border:1px solid #d0d5dd;
   background:#fff;
   border-radius:12px;
@@ -249,3 +254,6 @@ th{color:#475467;background:#f8f9fc;font-size:.78rem;text-transform:uppercase;le
   .footer-inner{align-items:flex-start;flex-direction:column}
   .map-card iframe{height:330px}
 }
+
+.service-card:focus-visible,.demo-user:focus-visible,.link-button:focus-visible,.social-link:focus-visible{outline:3px solid rgba(52,72,212,.28);outline-offset:3px}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.btn:hover,.service-card:hover{transform:none}}

@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="es-ES" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="th_templates/head :: head"></head>
 <body>
   <header th:replace="th_templates/navbar :: navbar"></header>
 
-  <main class="main-index">
+  <main id="main-content" class="main-index">
     <div class="alert alert-danger" role="alert" th:if="${not #strings.isEmpty(mssg)}">
       <p th:text="${mssg}" class="text-center"></p>
     </div>
 
     <div class="container text-center">
       <img class="image2" src="/img/register.svg" alt="Ilustración de registro">
-      <h1 class="big-title2">Registrate 📝</h1>
-      <p class="subtitle2">Elegí cómo querés usar Home Repair.</p>
+      <h1 class="big-title2">Regístrate</h1>
+      <p class="subtitle2">Elige cómo quieres usar Home Repair.</p>
     </div>
 
     <div class="row row-user-card" role="group" aria-label="Tipo de cuenta">
@@ -26,7 +26,7 @@
       <div class="col card-user">
         <button id="provider-card" class="card" type="button">
           <img src="/img/provider-avatar.png" class="card-img-top" alt="">
-          <span class="card-title">Proveedor</span>
+          <span class="card-title">Profesional</span>
           <span class="card-text">Quiero ofrecer mis servicios</span>
         </button>
       </div>
@@ -45,7 +45,7 @@
         </div>
 
         <div class="field">
-          <label class="label" for="email">Email</label>
+          <label class="label" for="email">Correo electrónico</label>
           <input type="email" id="email" th:field="*{email}" autocomplete="email" maxlength="120" required>
         </div>
 
@@ -68,24 +68,24 @@
         </div>
 
         <div class="field">
-          <label class="label" for="password2">Repetí tu contraseña</label>
+          <label class="label" for="password2">Repite tu contraseña</label>
           <input type="password" id="password2" autocomplete="new-password" minlength="6" maxlength="72" required>
         </div>
 
         <div id="profession-group" class="field">
           <label class="label" for="profession">Profesión</label>
           <select id="profession" th:field="*{profession}">
-            <option value="">Elegí tu profesión</option>
+            <option value="">Elige tu profesión</option>
             <option th:each="profession : ${professions}" th:text="${profession.name}" th:value="${profession}"></option>
           </select>
         </div>
 
         <div id="description-group" class="field">
           <label class="label" for="description">Descripción</label>
-          <textarea id="description" maxlength="500" th:field="*{description}" placeholder="Contá brevemente qué servicios ofrecés"></textarea>
+          <textarea id="description" maxlength="500" th:field="*{description}" placeholder="Describe brevemente qué servicios ofreces"></textarea>
         </div>
 
-        <button type="submit" class="btn btn-warning button btn-form">Crear cuenta 📝</button>
+        <button type="submit" class="btn btn-warning button btn-form">Crear cuenta</button>
       </form>
     </div>
   </main>

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="es-ES" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="th_templates/head :: head"></head>
 <body>
   <header th:replace="th_templates/navbar :: navbar"></header>
 
-  <main class="main-index">
+  <main id="main-content" class="main-index">
     <div class="alert alert-danger" role="alert" th:if="${not #strings.isEmpty(mssg)}">
       <p th:text="${mssg}" class="text-center"></p>
     </div>
@@ -17,19 +17,19 @@
       </div>
       <div class="row">
         <div class="col">
-          <h1 class="big-title2">✅ ¡Ingresá!</h1>
+          <h1 class="big-title2">Iniciar sesión</h1>
         </div>
       </div>
     </div>
 
     <form class="form-container" th:action="@{/logincheck}" method="post">
-      <label class="label" for="email">Email</label>
-      <input type="email" id="email" name="email" placeholder="email@email.com" autocomplete="email" required>
+      <label class="label" for="email">Correo electrónico</label>
+      <input type="email" id="email" name="email" placeholder="Correo electrónico" autocomplete="email" required>
 
       <label class="label" for="password">Contraseña</label>
       <input type="password" id="password" name="password" placeholder="Contraseña" autocomplete="current-password" required>
 
-      <button type="submit" class="btn btn-warning button btn-form">✅ ¡Ingresá!</button>
+      <button type="submit" class="btn btn-warning button btn-form">Iniciar sesión</button>
     </form>
   </main>
 
