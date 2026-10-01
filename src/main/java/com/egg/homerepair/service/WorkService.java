@@ -24,6 +24,7 @@ public class WorkService {
             throw new MiException("La solicitud de trabajo no es válida");
         }
 
+        work.setId(null);
         work.setWorkStatus(WorkStatus.REQUIRED);
         workRepository.save(work);
     }

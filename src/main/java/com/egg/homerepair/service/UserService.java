@@ -51,6 +51,8 @@ public class UserService implements UserDetailsService {
             throw new MiException("El email ya se encuentra registrado");
         }
 
+        user.setId(null);
+
         try {
             boolean provider = user.getProfession() != null;
             Image image = imageService.getByName(
