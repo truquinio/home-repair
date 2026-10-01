@@ -7,7 +7,6 @@ import java.io.IOException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ImageService {
@@ -25,22 +24,6 @@ public class ImageService {
         if (image != null && image.getId() == null) {
             imageRepository.save(image);
         }
-    }
-
-    @Transactional
-    public Image Update(MultipartFile file, String imageId) throws IOException {
-        if (file == null || file.isEmpty()) {
-            return imageId == null ? null : GetById(imageId);
-        }
-
-        Image image = imageId == null
-                ? new Image()
-                : imageRepository.findById(imageId).orElseGet(Image::new);
-
-        image.setMime(file.getContentType());
-        image.setName(file.getOriginalFilename());
-        image.setContent(file.getBytes());
-        return imageRepository.save(image);
     }
 
     @Transactional(readOnly = true)
