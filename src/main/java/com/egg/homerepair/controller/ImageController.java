@@ -4,7 +4,6 @@ import com.egg.homerepair.entity.Image;
 import com.egg.homerepair.service.ImageService;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +47,7 @@ public class ImageController {
 
         return ResponseEntity.ok()
                 .contentType(mediaType)
-                .header(HttpHeaders.X_CONTENT_TYPE_OPTIONS, "nosniff")
+                .header("X-Content-Type-Options", "nosniff")
                 .body(image.getContent());
     }
 
@@ -71,7 +70,7 @@ public class ImageController {
 
         return ResponseEntity.ok()
                 .contentType(mediaType)
-                .header(HttpHeaders.X_CONTENT_TYPE_OPTIONS, "nosniff")
+                .header("X-Content-Type-Options", "nosniff")
                 .body(resource);
     }
 }
