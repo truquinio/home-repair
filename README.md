@@ -169,6 +169,12 @@ El objetivo declarado es **WCAG 2.2 AA**; no se presenta como una certificación
 
 Las credenciales reales de base de datos se proporcionan mediante configuración externa y no deben versionarse.
 
+## 🔏 Uso y reutilización
+
+Este repositorio se publica como proyecto de portfolio y demostración técnica. **No concede actualmente una licencia open source de reutilización** sobre el código.
+
+© 2026 Federico Trucco. All rights reserved.
+
 ---
 
 **Federico Trucco / [@truquinio](https://github.com/truquinio)** · [LinkedIn](https://www.linkedin.com/in/federico-trucco/)
