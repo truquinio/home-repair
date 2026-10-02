@@ -5,12 +5,12 @@
 **Marketplace web para conectar personas que necesitan reparaciones del hogar con profesionales de distintas especialidades.**
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-2ea44f?style=flat&logo=githubpages&logoColor=white)](https://truquinio.github.io/home-repair/)
-[![CI and Pages](https://github.com/truinio/home-repair/actions/workflows/ci-pages.yml/badge.svg)](https://github.com/truinio/home-repair/actions/workflows/ci-pages.yml)
+[![CI and Pages](https://github.com/truquinio/home-repair/actions/workflows/ci-pages.yml/badge.svg)](https://github.com/truquinio/home-repair/actions/workflows/ci-pages.yml)
 ![Java 17](https://img.shields.io/badge/Java-17-ED8B00?style=flat&logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7.18-6DB33F?style=flat&logo=springboot&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
 
-[**Abrir demo**](https://truquinio.github.io/home-repair/) · [**Ver código**](https://github.com/trauquinio/home-repair) · [**UX/UI y accesibilidad**](docs/UX_UI_ACCESSIBILITY.md)
+[**Abrir demo**](https://truquinio.github.io/home-repair/) · [**Ver código**](https://github.com/truquinio/home-repair) · [**UX/UI y accesibilidad**](docs/UX_UI_ACCESSIBILITY.md)
 
 </div>
 
@@ -160,4 +160,4 @@ Las credenciales reales de base de datos no deben versionarse. El backend usa co
 
 ---
 
-**Federico Trucco / [@truquinio](https://github.com/trauquinio)** · [LinkedIn](https://www.linkedin.com/in/federico-trucco/)
+**Federico Trucco / [@truquinio](https://github.com/truquinio)** · [LinkedIn](https://www.linkedin.com/in/federico-trucco/)
