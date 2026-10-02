@@ -169,10 +169,6 @@ El objetivo declarado es **WCAG 2.2 AA**; no se presenta como una certificación
 
 Las credenciales reales de base de datos se proporcionan mediante configuración externa y no deben versionarse.
 
-## 📜 Licencia
-
-El código de este proyecto se publica bajo la [Licencia MIT](LICENSE).
-
 ---
 
 **Federico Trucco / [@truquinio](https://github.com/truquinio)** · [LinkedIn](https://www.linkedin.com/in/federico-trucco/)
