@@ -4,13 +4,13 @@
 
 ### Plataforma para conectar clientes con profesionales de reparaciones del hogar
 
-[![Demo](https://img.shields.io/badge/Abrir%20demo-GitHub%20Pages-2ea44f?style=for-the-badge&logo=githubpages&logoColor=white)](https://truquinio.github.io/home-repair/)
+[![Demo](https://img.shields.io/badge/Abrir%20demo-GitHub%20Pages-2ea44f?style=flat-square)](https://truquinio.github.io/home-repair/)
 [![CI](https://github.com/truquinio/home-repair/actions/workflows/ci-pages.yml/badge.svg)](https://github.com/truquinio/home-repair/actions/workflows/ci-pages.yml)
 
-![Java 17](https://img.shields.io/badge/Java-17-ED8B00?style=flat&logo=openjdk&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7.18-6DB33F?style=flat&logo=springboot&logoColor=white)
-![Spring Security](https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat&logo=springsecurity&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
+![Java 17](https://img.shields.io/badge/Java-17-ED8B00?style=flat-square)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7.18-6DB33F?style=flat-square)
+![Spring Security](https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat-square)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat-square)
 
 [**Demo**](https://truquinio.github.io/home-repair/) ·
 [**UX/UI y accesibilidad**](docs/UX_UI_ACCESSIBILITY.md) ·
@@ -68,7 +68,7 @@ El repositorio conserva el backend original en Java/Spring Boot y una **demo fro
 ## 🏗️ Arquitectura
 
 ~~~mermaid
-flowchart LR
+flowchart TD
     U["Usuario"] --> T["Thymeleaf / Frontend"]
     T --> W["Spring MVC"]
     W --> S["Servicios"]
@@ -178,3 +178,7 @@ Este repositorio se publica como proyecto de portfolio y demostración técnica.
 ---
 
 **Federico Trucco / [@truquinio](https://github.com/truquinio)** · [LinkedIn](https://www.linkedin.com/in/federico-trucco/)
+
+---
+
+**by [truquinio](https://github.com/truquinio)** · [LinkedIn](https://www.linkedin.com/in/federico-trucco/)
