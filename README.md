@@ -95,18 +95,27 @@ flowchart TD
 ### Requisitos
 
 - Java 17
-- MySQL
-- Maven Wrapper
+- MySQL con la base `home_repair` creada y un usuario con permisos
+- Maven Wrapper incluido en el repositorio
 
-~~~text
-DB_URL=jdbc:mysql://localhost:3306/home_repair
-DB_USERNAME=tu_usuario
-DB_PASSWORD=tu_password
+Desde la raíz del repositorio, define las variables en la misma terminal donde ejecutarás Maven:
+
+~~~sql
+CREATE DATABASE home_repair CHARACTER SET utf8mb4;
 ~~~
+
+~~~powershell
+$env:DB_URL = 'jdbc:mysql://localhost:3306/home_repair'
+$env:DB_USERNAME = 'tu_usuario'
+$env:DB_PASSWORD = 'tu_password'
+~~~
+
+En Bash usa `export DB_URL='jdbc:mysql://localhost:3306/home_repair'`, `export DB_USERNAME='tu_usuario'` y `export DB_PASSWORD='tu_password'`.
 
 Linux/macOS:
 
 ~~~bash
+chmod +x mvnw
 ./mvnw spring-boot:run
 ~~~
 
@@ -124,7 +133,6 @@ Windows:
 Linux/macOS:
 
 ~~~bash
-rm -rf public
 mkdir -p public/img
 cp demo/index.html demo/styles.css demo/app.js public/
 cp -R src/main/resources/static/img/. public/img/
@@ -134,12 +142,13 @@ python -m http.server 8080 --directory public
 Windows PowerShell:
 
 ~~~powershell
-Remove-Item public -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force public/img | Out-Null
 Copy-Item demo/index.html,demo/styles.css,demo/app.js public/
 Copy-Item src/main/resources/static/img/* public/img/ -Recurse
 python -m http.server 8080 --directory public
 ~~~
+
+Abre `http://localhost:8080/` para la demo local.
 
 </details>
 
@@ -175,9 +184,6 @@ Este repositorio se publica como proyecto de portfolio y demostración técnica.
 
 © 2026 Federico Trucco. All rights reserved.
 
----
-
-**Federico Trucco / [@truquinio](https://github.com/truquinio)** · [LinkedIn](https://www.linkedin.com/in/federico-trucco/)
 
 ---
 
